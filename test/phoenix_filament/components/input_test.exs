@@ -3,7 +3,7 @@ defmodule PhoenixFilament.Components.InputTest do
 
   alias PhoenixFilament.Components.Input
 
-  defp form_field(params \\ %{}, field_name, opts \\ []) do
+  defp form_field(params, field_name, opts \\ []) do
     as = Keyword.get(opts, :as, :post)
     form = to_form(params, as: to_string(as))
     form[field_name]
@@ -92,8 +92,6 @@ defmodule PhoenixFilament.Components.InputTest do
     end
 
     test "renders errors with role alert" do
-      assigns = %{}
-
       field = %Phoenix.HTML.FormField{
         id: "post_title",
         name: "post[title]",
@@ -115,9 +113,11 @@ defmodule PhoenixFilament.Components.InputTest do
         }
       }
 
+      assigns = %{field: field}
+
       html =
         rendered_to_string(~H"""
-        <Input.text_input field={field} label="Title" />
+        <Input.text_input field={@field} label="Title" />
         """)
 
       assert html =~ "can&#39;t be blank" or html =~ "can't be blank"
