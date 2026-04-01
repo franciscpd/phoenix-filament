@@ -24,6 +24,7 @@ defmodule PhoenixFilament.Components do
       import PhoenixFilament.Components.Modal
       import PhoenixFilament.Components.Theme
       import PhoenixFilament.Components.FieldRenderer, only: [render_field: 1]
+      import PhoenixFilament.Form.FormBuilder, only: [form_builder: 1]
     end
   end
 end
