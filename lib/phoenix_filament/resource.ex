@@ -15,17 +15,23 @@ defmodule PhoenixFilament.Resource do
   #{NimbleOptions.docs(PhoenixFilament.Resource.Options.schema())}
   """
 
-  @valid_resource_keys [:schema, :repo, :opts, :form_fields, :table_columns]
+  @valid_resource_keys [:schema, :repo, :opts, :form_fields, :form_schema, :table_columns]
 
   @doc """
   Callback to retrieve resource metadata.
 
-  Valid keys: #{inspect([:schema, :repo, :opts, :form_fields, :table_columns])}
+  Valid keys: #{inspect([:schema, :repo, :opts, :form_fields, :form_schema, :table_columns])}
   """
   @callback __resource__(:schema) :: module()
   @callback __resource__(:repo) :: module()
   @callback __resource__(:opts) :: keyword()
   @callback __resource__(:form_fields) :: [PhoenixFilament.Field.t()]
+  @callback __resource__(:form_schema) ::
+              [
+                PhoenixFilament.Field.t()
+                | PhoenixFilament.Form.Section.t()
+                | PhoenixFilament.Form.Columns.t()
+              ]
   @callback __resource__(:table_columns) :: [PhoenixFilament.Column.t()]
 
   defmacro __using__(opts) do
@@ -52,6 +58,9 @@ defmodule PhoenixFilament.Resource do
       Module.register_attribute(__MODULE__, :_phx_filament_form_fields, accumulate: true)
       Module.register_attribute(__MODULE__, :_phx_filament_table_columns, accumulate: true)
 
+      @_phx_filament_form_schema nil
+      @_phx_filament_form_context nil
+
       import PhoenixFilament.Resource.DSL, only: [form: 1, table: 1]
 
       @before_compile PhoenixFilament.Resource
@@ -67,10 +76,23 @@ defmodule PhoenixFilament.Resource do
       def __resource__(:repo), do: @_phx_filament_repo
       def __resource__(:opts), do: @_phx_filament_opts
 
+      def __resource__(:form_schema) do
+        case @_phx_filament_form_schema do
+          nil -> PhoenixFilament.Resource.Defaults.form_fields(@_phx_filament_schema)
+          schema -> schema
+        end
+      end
+
       def __resource__(:form_fields) do
-        case @_phx_filament_form_fields |> Enum.reverse() do
-          [] -> PhoenixFilament.Resource.Defaults.form_fields(@_phx_filament_schema)
-          fields -> fields
+        case @_phx_filament_form_schema do
+          nil ->
+            case @_phx_filament_form_fields |> Enum.reverse() do
+              [] -> PhoenixFilament.Resource.Defaults.form_fields(@_phx_filament_schema)
+              fields -> fields
+            end
+
+          schema ->
+            PhoenixFilament.Form.Schema.extract_fields(schema)
         end
       end
 
