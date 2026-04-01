@@ -148,73 +148,73 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | TBD | Pending |
-| FOUND-02 | TBD | Pending |
-| FOUND-03 | TBD | Pending |
-| FOUND-04 | TBD | Pending |
-| COMP-01 | TBD | Pending |
-| COMP-02 | TBD | Pending |
-| COMP-03 | TBD | Pending |
-| COMP-04 | TBD | Pending |
-| COMP-05 | TBD | Pending |
-| COMP-06 | TBD | Pending |
-| COMP-07 | TBD | Pending |
-| COMP-08 | TBD | Pending |
-| COMP-09 | TBD | Pending |
-| COMP-10 | TBD | Pending |
-| COMP-11 | TBD | Pending |
-| COMP-12 | TBD | Pending |
-| THEME-01 | TBD | Pending |
-| THEME-02 | TBD | Pending |
-| THEME-03 | TBD | Pending |
-| THEME-04 | TBD | Pending |
-| FORM-01 | TBD | Pending |
-| FORM-02 | TBD | Pending |
-| FORM-03 | TBD | Pending |
-| FORM-04 | TBD | Pending |
-| FORM-05 | TBD | Pending |
-| FORM-06 | TBD | Pending |
-| FORM-07 | TBD | Pending |
-| TABLE-01 | TBD | Pending |
-| TABLE-02 | TBD | Pending |
-| TABLE-03 | TBD | Pending |
-| TABLE-04 | TBD | Pending |
-| TABLE-05 | TBD | Pending |
-| TABLE-06 | TBD | Pending |
-| TABLE-07 | TBD | Pending |
-| TABLE-08 | TBD | Pending |
-| TABLE-09 | TBD | Pending |
-| TABLE-10 | TBD | Pending |
-| RES-01 | TBD | Pending |
-| RES-02 | TBD | Pending |
-| RES-03 | TBD | Pending |
-| RES-04 | TBD | Pending |
-| RES-05 | TBD | Pending |
-| RES-06 | TBD | Pending |
-| PANEL-01 | TBD | Pending |
-| PANEL-02 | TBD | Pending |
-| PANEL-03 | TBD | Pending |
-| PANEL-04 | TBD | Pending |
-| PANEL-05 | TBD | Pending |
-| PANEL-06 | TBD | Pending |
-| PANEL-07 | TBD | Pending |
-| PANEL-08 | TBD | Pending |
-| PLUG-01 | TBD | Pending |
-| PLUG-02 | TBD | Pending |
-| PLUG-03 | TBD | Pending |
-| PLUG-04 | TBD | Pending |
-| PLUG-05 | TBD | Pending |
-| PLUG-06 | TBD | Pending |
-| DIST-01 | TBD | Pending |
-| DIST-02 | TBD | Pending |
-| DIST-03 | TBD | Pending |
-| DIST-04 | TBD | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| COMP-01 | Phase 2 | Pending |
+| COMP-02 | Phase 2 | Pending |
+| COMP-03 | Phase 2 | Pending |
+| COMP-04 | Phase 2 | Pending |
+| COMP-05 | Phase 2 | Pending |
+| COMP-06 | Phase 2 | Pending |
+| COMP-07 | Phase 2 | Pending |
+| COMP-08 | Phase 2 | Pending |
+| COMP-09 | Phase 2 | Pending |
+| COMP-10 | Phase 2 | Pending |
+| COMP-11 | Phase 2 | Pending |
+| COMP-12 | Phase 2 | Pending |
+| THEME-01 | Phase 2 | Pending |
+| THEME-02 | Phase 2 | Pending |
+| THEME-03 | Phase 2 | Pending |
+| THEME-04 | Phase 2 | Pending |
+| FORM-01 | Phase 3 | Pending |
+| FORM-02 | Phase 3 | Pending |
+| FORM-03 | Phase 3 | Pending |
+| FORM-04 | Phase 3 | Pending |
+| FORM-05 | Phase 3 | Pending |
+| FORM-06 | Phase 3 | Pending |
+| FORM-07 | Phase 3 | Pending |
+| TABLE-01 | Phase 4 | Pending |
+| TABLE-02 | Phase 4 | Pending |
+| TABLE-03 | Phase 4 | Pending |
+| TABLE-04 | Phase 4 | Pending |
+| TABLE-05 | Phase 4 | Pending |
+| TABLE-06 | Phase 4 | Pending |
+| TABLE-07 | Phase 4 | Pending |
+| TABLE-08 | Phase 4 | Pending |
+| TABLE-09 | Phase 4 | Pending |
+| TABLE-10 | Phase 4 | Pending |
+| RES-01 | Phase 5 | Pending |
+| RES-02 | Phase 5 | Pending |
+| RES-03 | Phase 5 | Pending |
+| RES-04 | Phase 5 | Pending |
+| RES-05 | Phase 5 | Pending |
+| RES-06 | Phase 5 | Pending |
+| PANEL-01 | Phase 6 | Pending |
+| PANEL-02 | Phase 6 | Pending |
+| PANEL-03 | Phase 6 | Pending |
+| PANEL-04 | Phase 6 | Pending |
+| PANEL-05 | Phase 6 | Pending |
+| PANEL-06 | Phase 6 | Pending |
+| PANEL-07 | Phase 6 | Pending |
+| PANEL-08 | Phase 6 | Pending |
+| PLUG-01 | Phase 7 | Pending |
+| PLUG-02 | Phase 7 | Pending |
+| PLUG-03 | Phase 7 | Pending |
+| PLUG-04 | Phase 7 | Pending |
+| PLUG-05 | Phase 7 | Pending |
+| PLUG-06 | Phase 7 | Pending |
+| DIST-01 | Phase 8 | Pending |
+| DIST-02 | Phase 8 | Pending |
+| DIST-03 | Phase 8 | Pending |
+| DIST-04 | Phase 8 | Pending |
 
 **Coverage:**
-- v1 requirements: 56 total
-- Mapped to phases: 0
-- Unmapped: 56 ⚠️
+- v1 requirements: 61 total (note: header previously said 56 — recount is 61)
+- Mapped to phases: 61
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after initial definition*
+*Last updated: 2026-03-31 — traceability filled by roadmap creation*
