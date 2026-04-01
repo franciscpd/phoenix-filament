@@ -253,6 +253,17 @@ test/phoenix_filament/components/
 - Navigation components (Phase 6 — Panel)
 - Table-specific components like pagination, filters (Phase 4)
 
+## Spec Amendments (Post-Review)
+
+### Modal Portal — Deferred to Phase 6
+The modal currently renders as a plain `<div>` with CSS class toggling. LiveView 1.1 `<.portal>` wrapping will be added in Phase 6 (Panel Shell) when the modal is integrated into the panel layout. The component API (`show`/`on_cancel`) is portal-ready — only the wrapping needs to change.
+
+### Modal JS Transitions — Deferred to Phase 6
+`JS.show`/`JS.hide` transitions and Escape key handling will be added alongside the portal integration in Phase 6.
+
+### COMP-04 Association-Backed Options — Deferred to Phase 3
+The select component accepts static option lists. Association-backed options (loading from belongs_to relationships) require Form Builder context and will be implemented in Phase 3 where the form can resolve associations before passing to the select.
+
 ---
 
 *Phase: 02-component-library-and-theming*

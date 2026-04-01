@@ -6,6 +6,19 @@ defmodule PhoenixFilament.Components.Modal do
   """
   use Phoenix.Component
 
+  @doc """
+  Renders a modal dialog controlled by the `show` boolean and an `on_cancel` event.
+
+  ## Example
+
+      <.modal id="delete-modal" show={@show_delete} on_cancel={JS.push("close_modal")}>
+        <:header>Delete Post?</:header>
+        <p>This action cannot be undone.</p>
+        <:actions>
+          <.button variant={:danger} phx-click="delete">Delete</.button>
+        </:actions>
+      </.modal>
+  """
   attr(:id, :string, required: true)
   attr(:show, :boolean, default: false)
   attr(:on_cancel, :any, default: nil)

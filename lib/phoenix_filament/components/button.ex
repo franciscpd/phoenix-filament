@@ -5,6 +5,13 @@ defmodule PhoenixFilament.Components.Button do
   """
   use Phoenix.Component
 
+  @doc """
+  Renders a button with variant, size, loading spinner, and disabled support.
+
+  ## Example
+
+      <.button variant={:primary} phx-click="save">Save</.button>
+  """
   attr(:variant, :atom, default: :primary, values: [:primary, :secondary, :danger, :ghost])
   attr(:size, :atom, default: :md, values: [:sm, :md, :lg])
   attr(:loading, :boolean, default: false)

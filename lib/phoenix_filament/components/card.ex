@@ -5,6 +5,15 @@ defmodule PhoenixFilament.Components.Card do
   """
   use Phoenix.Component
 
+  @doc """
+  Renders a card with optional title, named header/body/footer slots, or plain inner_block content.
+
+  ## Example
+
+      <.card title="Post Details">
+        <p>Content here</p>
+      </.card>
+  """
   attr(:title, :string, default: nil)
   attr(:class, :string, default: nil)
   attr(:rest, :global)

@@ -123,6 +123,7 @@ defmodule PhoenixFilament.Components.InputTest do
       assert html =~ "can&#39;t be blank" or html =~ "can't be blank"
       assert html =~ ~s(role="alert")
       assert html =~ "input-error"
+      assert html =~ ~s(aria-describedby="post_title-error")
     end
   end
 

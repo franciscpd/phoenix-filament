@@ -14,6 +14,13 @@ defmodule PhoenixFilament.Components.Badge do
   }
   @size_classes %{sm: "badge-sm", md: nil, lg: "badge-lg"}
 
+  @doc """
+  Renders a badge with color and size variants using daisyUI semantic classes.
+
+  ## Example
+
+      <.badge color={:success}>Active</.badge>
+  """
   attr(:color, :atom,
     default: :neutral,
     values: [:neutral, :primary, :success, :warning, :error, :info]

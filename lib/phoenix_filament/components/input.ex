@@ -11,6 +11,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- text_input/1 ---
 
+  @doc """
+  Renders a text input field with daisyUI styling, label, and inline error display.
+
+  ## Example
+
+      <.text_input field={@form[:title]} label="Title" placeholder="Enter title" />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:placeholder, :string, default: nil)
@@ -44,6 +51,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- textarea/1 ---
 
+  @doc """
+  Renders a textarea with daisyUI styling, label, and inline error display.
+
+  ## Example
+
+      <.textarea field={@form[:body]} label="Body" rows={5} placeholder="Enter content" />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:placeholder, :string, default: nil)
@@ -77,6 +91,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- number_input/1 ---
 
+  @doc """
+  Renders a number input with optional min, max, and step constraints.
+
+  ## Example
+
+      <.number_input field={@form[:views]} label="Views" min={0} max={9999} />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:placeholder, :string, default: nil)
@@ -116,6 +137,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- select/1 ---
 
+  @doc """
+  Renders a select dropdown with static option list, optional prompt, and inline errors.
+
+  ## Example
+
+      <.select field={@form[:status]} label="Status" options={[{"Draft", "draft"}, {"Published", "published"}]} prompt="Choose status" />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:options, :list, required: true)
@@ -150,6 +178,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- checkbox/1 ---
 
+  @doc """
+  Renders a checkbox with hidden false-value input for reliable form submission.
+
+  ## Example
+
+      <.checkbox field={@form[:published]} label="Published" />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:required, :boolean, default: false)
@@ -184,6 +219,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- toggle/1 ---
 
+  @doc """
+  Renders a toggle switch (daisyUI `toggle` class) with hidden false-value input.
+
+  ## Example
+
+      <.toggle field={@form[:active]} label="Active" />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:required, :boolean, default: false)
@@ -218,6 +260,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- date/1 ---
 
+  @doc """
+  Renders a native HTML5 date input, normalizing `%Date{}` values to ISO 8601 strings.
+
+  ## Example
+
+      <.date field={@form[:published_at]} label="Published At" min="2026-01-01" />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:min, :string, default: nil)
@@ -253,6 +302,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- datetime/1 ---
 
+  @doc """
+  Renders a native HTML5 datetime-local input, normalizing `%NaiveDateTime{}` and `%DateTime{}` values.
+
+  ## Example
+
+      <.datetime field={@form[:starts_at]} label="Starts At" />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
   attr(:min, :string, default: nil)
@@ -288,6 +344,13 @@ defmodule PhoenixFilament.Components.Input do
 
   # --- hidden/1 ---
 
+  @doc """
+  Renders a hidden input with no label or wrapper — use for form fields not shown to the user.
+
+  ## Example
+
+      <.hidden field={@form[:id]} />
+  """
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:rest, :global)
 

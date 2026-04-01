@@ -43,6 +43,13 @@ defmodule PhoenixFilament.Components.Theme do
   def theme_attr(theme) when is_atom(theme), do: Atom.to_string(theme)
   def theme_attr(theme) when is_binary(theme), do: theme
 
+  @doc """
+  Renders a daisyUI swap toggle that switches between light and dark themes via `theme-controller`.
+
+  ## Example
+
+      <.theme_switcher light_theme="light" dark_theme="dark" />
+  """
   attr(:light_theme, :string, default: "light")
   attr(:dark_theme, :string, default: "dark")
   attr(:class, :string, default: nil)

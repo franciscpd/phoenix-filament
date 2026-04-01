@@ -6,6 +6,13 @@ defmodule PhoenixFilament.Components.FieldRenderer do
   use Phoenix.Component
   import PhoenixFilament.Components.Input
 
+  @doc """
+  Dispatches a `%PhoenixFilament.Field{}` struct to the appropriate input component.
+
+  ## Example
+
+      <.render_field pf_field={%Field{type: :text_input, name: :title, label: "Title", opts: []}} form={@form} />
+  """
   attr(:pf_field, PhoenixFilament.Field, required: true)
   attr(:form, :any, required: true)
 
