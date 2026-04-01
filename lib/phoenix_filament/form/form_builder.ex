@@ -24,12 +24,12 @@ defmodule PhoenixFilament.Form.FormBuilder do
     4 => "grid-cols-4"
   }
 
-  attr :form, :any, required: true
-  attr :schema, :list, required: true
-  attr :submit_label, :string, default: "Save"
-  attr :submit, :boolean, default: true
-  attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(phx-change phx-submit)
+  attr(:form, :any, required: true)
+  attr(:schema, :list, required: true)
+  attr(:submit_label, :string, default: "Save")
+  attr(:submit, :boolean, default: true)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global, include: ~w(phx-change phx-submit))
 
   def form_builder(assigns) do
     ~H"""
@@ -44,8 +44,8 @@ defmodule PhoenixFilament.Form.FormBuilder do
 
   # Private components for recursive rendering
 
-  attr :items, :list, required: true
-  attr :form, :any, required: true
+  attr(:items, :list, required: true)
+  attr(:form, :any, required: true)
 
   defp render_items(assigns) do
     ~H"""
@@ -55,8 +55,8 @@ defmodule PhoenixFilament.Form.FormBuilder do
     """
   end
 
-  attr :item, :any, required: true
-  attr :form, :any, required: true
+  attr(:item, :any, required: true)
+  attr(:form, :any, required: true)
 
   defp render_item(%{item: %Field{opts: opts} = field} = assigns) do
     case Keyword.get(opts, :visible_when) do

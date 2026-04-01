@@ -29,7 +29,10 @@ defmodule PhoenixFilament.Components.FieldRenderer do
       |> assign(:field, field)
       |> assign(:label, pf_field.label)
 
-    assigns = merge_field_opts(base_assigns, pf_field.opts)
+    # Strip framework-only opts that are not HTML attributes before merging.
+    # :visible_when is consumed by FormBuilder and must not reach input components.
+    sanitized_opts = Keyword.drop(pf_field.opts, [:visible_when])
+    assigns = merge_field_opts(base_assigns, sanitized_opts)
 
     dispatch(type, assigns)
   end
