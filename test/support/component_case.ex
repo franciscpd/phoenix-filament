@@ -8,7 +8,7 @@ defmodule PhoenixFilament.ComponentCase do
 
   using do
     quote do
-      import Phoenix.Component, only: [to_form: 2]
+      import Phoenix.Component
       import Phoenix.LiveViewTest, only: [rendered_to_string: 1]
 
       @doc "Creates a Phoenix.HTML.Form from a params map for testing."
