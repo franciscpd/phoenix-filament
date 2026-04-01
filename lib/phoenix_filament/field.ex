@@ -39,7 +39,7 @@ defmodule PhoenixFilament.Field do
   @type t :: %__MODULE__{
           name: atom(),
           type: field_type(),
-          label: String.t() | nil,
+          label: String.t(),
           opts: keyword()
         }
 
@@ -49,7 +49,7 @@ defmodule PhoenixFilament.Field do
   @spec new(atom(), field_type(), keyword()) :: t()
   def new(name, type, opts) do
     {label, opts} = Keyword.pop(opts, :label)
-    label = label || humanize(name)
+    label = label || PhoenixFilament.Naming.humanize(name)
     %__MODULE__{name: name, type: type, label: label, opts: opts}
   end
 
@@ -88,11 +88,4 @@ defmodule PhoenixFilament.Field do
   @doc "Creates a `:hidden` field."
   @spec hidden(atom(), keyword()) :: t()
   def hidden(name, opts \\ []), do: new(name, :hidden, opts)
-
-  defp humanize(atom) do
-    atom
-    |> Atom.to_string()
-    |> String.replace("_", " ")
-    |> String.capitalize()
-  end
 end

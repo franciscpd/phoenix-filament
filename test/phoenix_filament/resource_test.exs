@@ -81,5 +81,11 @@ defmodule PhoenixFilament.ResourceTest do
       assert length(columns) > 0
       assert Enum.all?(columns, &match?(%PhoenixFilament.Column{}, &1))
     end
+
+    test "raises ArgumentError for unknown key" do
+      assert_raise ArgumentError, ~r/unknown resource key :nonexistent/, fn ->
+        TestResource.__resource__(:nonexistent)
+      end
+    end
   end
 end

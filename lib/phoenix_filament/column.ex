@@ -17,7 +17,7 @@ defmodule PhoenixFilament.Column do
 
   @type t :: %__MODULE__{
           name: atom(),
-          label: String.t() | nil,
+          label: String.t(),
           opts: keyword()
         }
 
@@ -27,14 +27,11 @@ defmodule PhoenixFilament.Column do
   @spec column(atom(), keyword()) :: t()
   def column(name, opts \\ []) do
     {label, opts} = Keyword.pop(opts, :label)
-    label = label || humanize(name)
+    label = label || PhoenixFilament.Naming.humanize(name)
     %__MODULE__{name: name, label: label, opts: opts}
   end
 
-  defp humanize(atom) do
-    atom
-    |> Atom.to_string()
-    |> String.replace("_", " ")
-    |> String.capitalize()
-  end
+  @doc "Creates a new Column struct. Alias for `column/2`."
+  @spec new(atom(), keyword()) :: t()
+  def new(name, opts \\ []), do: column(name, opts)
 end

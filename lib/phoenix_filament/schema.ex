@@ -86,6 +86,7 @@ defmodule PhoenixFilament.Schema do
   defp association_type(%Ecto.Association.BelongsTo{}), do: :belongs_to
   defp association_type(%Ecto.Association.Has{cardinality: :many}), do: :has_many
   defp association_type(%Ecto.Association.Has{cardinality: :one}), do: :has_one
+  defp association_type(%Ecto.Association.ManyToMany{}), do: :many_to_many
 
   defp excluded_field?(name) do
     name_str = Atom.to_string(name)
@@ -96,12 +97,18 @@ defmodule PhoenixFilament.Schema do
   end
 
   defp ensure_schema!(schema) do
-    Code.ensure_loaded!(schema)
+    case Code.ensure_loaded(schema) do
+      {:module, _} ->
+        unless function_exported?(schema, :__schema__, 1) do
+          raise ArgumentError,
+                "#{inspect(schema)} is not an Ecto schema. " <>
+                  "Ensure the module has `use Ecto.Schema` and defines a schema block."
+        end
 
-    unless function_exported?(schema, :__schema__, 1) do
-      raise ArgumentError,
-            "#{inspect(schema)} is not an Ecto schema. " <>
-              "Expected a module that uses Ecto.Schema."
+      {:error, _} ->
+        raise ArgumentError,
+              "Module #{inspect(schema)} could not be loaded. " <>
+                "Verify the module exists and is compiled (check spelling and that it's in your project's compile paths)."
     end
   end
 end

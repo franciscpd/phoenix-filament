@@ -9,7 +9,24 @@ defmodule PhoenixFilament.Resource do
           schema: MyApp.Blog.Post,
           repo: MyApp.Repo
       end
+
+  ## Options
+
+  #{NimbleOptions.docs(PhoenixFilament.Resource.Options.schema())}
   """
+
+  @valid_resource_keys [:schema, :repo, :opts, :form_fields, :table_columns]
+
+  @doc """
+  Callback to retrieve resource metadata.
+
+  Valid keys: #{inspect([:schema, :repo, :opts, :form_fields, :table_columns])}
+  """
+  @callback __resource__(:schema) :: module()
+  @callback __resource__(:repo) :: module()
+  @callback __resource__(:opts) :: keyword()
+  @callback __resource__(:form_fields) :: [PhoenixFilament.Field.t()]
+  @callback __resource__(:table_columns) :: [PhoenixFilament.Column.t()]
 
   defmacro __using__(opts) do
     schema_mod =
@@ -25,6 +42,8 @@ defmodule PhoenixFilament.Resource do
       )
 
     quote do
+      @behaviour PhoenixFilament.Resource
+
       @_phx_filament_opts NimbleOptions.validate!(
                             unquote(opts),
                             PhoenixFilament.Resource.Options.schema()
@@ -60,6 +79,12 @@ defmodule PhoenixFilament.Resource do
           [] -> PhoenixFilament.Resource.Defaults.table_columns(@_phx_filament_schema)
           columns -> columns
         end
+      end
+
+      def __resource__(key) do
+        raise ArgumentError,
+              "unknown resource key #{inspect(key)}. " <>
+                "Valid keys are: #{inspect(unquote(Macro.escape(@valid_resource_keys)))}"
       end
     end
   end

@@ -2,8 +2,6 @@ defmodule PhoenixFilament.Resource.Defaults do
   @moduledoc false
 
   def form_fields(schema) do
-    Code.ensure_loaded!(schema)
-
     PhoenixFilament.Schema.visible_fields(schema)
     |> Enum.map(fn %{name: name, type: ecto_type} ->
       field_type = PhoenixFilament.Schema.type_to_field_type(ecto_type)
@@ -12,8 +10,6 @@ defmodule PhoenixFilament.Resource.Defaults do
   end
 
   def table_columns(schema) do
-    Code.ensure_loaded!(schema)
-
     PhoenixFilament.Schema.visible_fields(schema)
     |> Enum.map(fn %{name: name} ->
       PhoenixFilament.Column.column(name, sortable: true)

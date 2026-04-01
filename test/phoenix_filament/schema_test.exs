@@ -2,7 +2,7 @@ defmodule PhoenixFilament.SchemaTest do
   use ExUnit.Case, async: true
 
   alias PhoenixFilament.Schema
-  alias PhoenixFilament.Test.Schemas.{Post, User, Comment, Profile}
+  alias PhoenixFilament.Test.Schemas.{Post, User, Comment, Profile, Tag}
 
   describe "fields/1" do
     test "returns all non-virtual fields with types" do
@@ -63,6 +63,15 @@ defmodule PhoenixFilament.SchemaTest do
       names = Enum.map(assocs, & &1.name)
       assert :post in names
       assert :user in names
+    end
+
+    test "returns many_to_many associations" do
+      assocs = Schema.associations(Tag)
+      posts = Enum.find(assocs, &(&1.name == :posts))
+
+      assert posts != nil
+      assert posts.type == :many_to_many
+      assert posts.related == Post
     end
   end
 
@@ -141,6 +150,20 @@ defmodule PhoenixFilament.SchemaTest do
       assert :views in names
       assert :published in names
       assert :published_at in names
+    end
+  end
+
+  describe "ensure_schema! error messages" do
+    test "raises helpful message for non-schema module" do
+      assert_raise ArgumentError, ~r/is not an Ecto schema.*use Ecto.Schema/, fn ->
+        Schema.fields(Enum)
+      end
+    end
+
+    test "raises helpful message for nonexistent module" do
+      assert_raise ArgumentError, ~r/could not be loaded.*Verify the module exists/, fn ->
+        Schema.fields(Does.Not.Exist)
+      end
     end
   end
 

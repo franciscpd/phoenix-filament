@@ -52,7 +52,7 @@
 - Create: `lib/phoenix_filament.ex`
 - Create: `test/test_helper.exs`
 
-- [ ] **Step 1: Create `mix.exs`**
+- [x] **Step 1: Create `mix.exs`**
 
 ```elixir
 defmodule PhoenixFilament.MixProject do
@@ -105,7 +105,7 @@ defmodule PhoenixFilament.MixProject do
 end
 ```
 
-- [ ] **Step 2: Create `.formatter.exs`**
+- [x] **Step 2: Create `.formatter.exs`**
 
 ```elixir
 [
@@ -113,7 +113,7 @@ end
 ]
 ```
 
-- [ ] **Step 3: Create `lib/phoenix_filament.ex`**
+- [x] **Step 3: Create `lib/phoenix_filament.ex`**
 
 ```elixir
 defmodule PhoenixFilament do
@@ -126,23 +126,23 @@ defmodule PhoenixFilament do
 end
 ```
 
-- [ ] **Step 4: Create `test/test_helper.exs`**
+- [x] **Step 4: Create `test/test_helper.exs`**
 
 ```elixir
 ExUnit.start()
 ```
 
-- [ ] **Step 5: Install dependencies and verify compilation**
+- [x] **Step 5: Install dependencies and verify compilation**
 
 Run: `mix deps.get && mix compile`
 Expected: Clean compilation with no warnings
 
-- [ ] **Step 6: Run empty test suite**
+- [x] **Step 6: Run empty test suite**
 
 Run: `mix test`
 Expected: `0 tests, 0 failures`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add mix.exs mix.lock .formatter.exs lib/phoenix_filament.ex test/test_helper.exs
@@ -161,7 +161,7 @@ git commit -m "chore: scaffold hex package with deps"
 
 These are Ecto schemas compiled only in test env (via `elixirc_paths`). They exist purely to test introspection — no database, no migrations, no repo.
 
-- [ ] **Step 1: Create `test/support/schemas/post.ex`**
+- [x] **Step 1: Create `test/support/schemas/post.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Test.Schemas.Post do
@@ -181,7 +181,7 @@ defmodule PhoenixFilament.Test.Schemas.Post do
 end
 ```
 
-- [ ] **Step 2: Create `test/support/schemas/user.ex`**
+- [x] **Step 2: Create `test/support/schemas/user.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Test.Schemas.User do
@@ -202,7 +202,7 @@ defmodule PhoenixFilament.Test.Schemas.User do
 end
 ```
 
-- [ ] **Step 3: Create `test/support/schemas/comment.ex`**
+- [x] **Step 3: Create `test/support/schemas/comment.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Test.Schemas.Comment do
@@ -219,7 +219,7 @@ defmodule PhoenixFilament.Test.Schemas.Comment do
 end
 ```
 
-- [ ] **Step 4: Create `test/support/schemas/profile.ex`**
+- [x] **Step 4: Create `test/support/schemas/profile.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Test.Schemas.Address do
@@ -249,12 +249,12 @@ defmodule PhoenixFilament.Test.Schemas.Profile do
 end
 ```
 
-- [ ] **Step 5: Verify schemas compile**
+- [x] **Step 5: Verify schemas compile**
 
 Run: `mix compile`
 Expected: Clean compilation, no warnings
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add test/support/schemas/
@@ -269,7 +269,7 @@ git commit -m "test: add ecto schemas for introspection testing"
 - Create: `test/phoenix_filament/field_test.exs`
 - Create: `lib/phoenix_filament/field.ex`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```elixir
 defmodule PhoenixFilament.FieldTest do
@@ -376,12 +376,12 @@ defmodule PhoenixFilament.FieldTest do
 end
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `mix test test/phoenix_filament/field_test.exs`
 Expected: FAIL — `PhoenixFilament.Field` module not found
 
-- [ ] **Step 3: Implement `lib/phoenix_filament/field.ex`**
+- [x] **Step 3: Implement `lib/phoenix_filament/field.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Field do
@@ -484,12 +484,12 @@ defmodule PhoenixFilament.Field do
 end
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `mix test test/phoenix_filament/field_test.exs`
 Expected: All tests pass
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/phoenix_filament/field.ex test/phoenix_filament/field_test.exs
@@ -504,7 +504,7 @@ git commit -m "feat: add Field struct with constructor functions"
 - Create: `test/phoenix_filament/column_test.exs`
 - Create: `lib/phoenix_filament/column.ex`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```elixir
 defmodule PhoenixFilament.ColumnTest do
@@ -550,12 +550,12 @@ defmodule PhoenixFilament.ColumnTest do
 end
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `mix test test/phoenix_filament/column_test.exs`
 Expected: FAIL — `PhoenixFilament.Column` module not found
 
-- [ ] **Step 3: Implement `lib/phoenix_filament/column.ex`**
+- [x] **Step 3: Implement `lib/phoenix_filament/column.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Column do
@@ -600,12 +600,12 @@ defmodule PhoenixFilament.Column do
 end
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `mix test test/phoenix_filament/column_test.exs`
 Expected: All tests pass
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/phoenix_filament/column.ex test/phoenix_filament/column_test.exs
@@ -620,7 +620,7 @@ git commit -m "feat: add Column struct with constructor function"
 - Create: `test/phoenix_filament/schema_test.exs`
 - Create: `lib/phoenix_filament/schema.ex`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```elixir
 defmodule PhoenixFilament.SchemaTest do
@@ -806,12 +806,12 @@ defmodule PhoenixFilament.SchemaTest do
 end
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `mix test test/phoenix_filament/schema_test.exs`
 Expected: FAIL — `PhoenixFilament.Schema` module not found
 
-- [ ] **Step 3: Implement `lib/phoenix_filament/schema.ex`**
+- [x] **Step 3: Implement `lib/phoenix_filament/schema.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Schema do
@@ -919,12 +919,12 @@ defmodule PhoenixFilament.Schema do
 end
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `mix test test/phoenix_filament/schema_test.exs`
 Expected: All tests pass
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/phoenix_filament/schema.ex test/phoenix_filament/schema_test.exs
@@ -941,7 +941,7 @@ git commit -m "feat: add Ecto schema introspection API"
 
 This task implements only the `__using__` macro with NimbleOptions validation and `__before_compile__` with `__resource__/1`. DSL blocks are wired in Task 7.
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```elixir
 defmodule PhoenixFilament.ResourceTest do
@@ -1031,7 +1031,7 @@ defmodule PhoenixFilament.ResourceTest do
 end
 ```
 
-- [ ] **Step 2: Create `test/support/fake_repo.ex` (stub module)**
+- [x] **Step 2: Create `test/support/fake_repo.ex` (stub module)**
 
 ```elixir
 defmodule PhoenixFilament.Test.FakeRepo do
@@ -1041,12 +1041,12 @@ defmodule PhoenixFilament.Test.FakeRepo do
 end
 ```
 
-- [ ] **Step 3: Run tests to verify they fail**
+- [x] **Step 3: Run tests to verify they fail**
 
 Run: `mix test test/phoenix_filament/resource_test.exs`
 Expected: FAIL — `PhoenixFilament.Resource` module not found
 
-- [ ] **Step 4: Create `lib/phoenix_filament/resource/options.ex`** (needed by Resource macro)
+- [x] **Step 4: Create `lib/phoenix_filament/resource/options.ex`** (needed by Resource macro)
 
 ```elixir
 defmodule PhoenixFilament.Resource.Options do
@@ -1064,7 +1064,7 @@ defmodule PhoenixFilament.Resource.Options do
 end
 ```
 
-- [ ] **Step 5: Implement `lib/phoenix_filament/resource.ex`**
+- [x] **Step 5: Implement `lib/phoenix_filament/resource.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Resource do
@@ -1139,7 +1139,7 @@ defmodule PhoenixFilament.Resource do
 end
 ```
 
-- [ ] **Step 6: Create stub `lib/phoenix_filament/resource/dsl.ex`** (full implementation in Task 7)
+- [x] **Step 6: Create stub `lib/phoenix_filament/resource/dsl.ex`** (full implementation in Task 7)
 
 ```elixir
 defmodule PhoenixFilament.Resource.DSL do
@@ -1159,7 +1159,7 @@ defmodule PhoenixFilament.Resource.DSL do
 end
 ```
 
-- [ ] **Step 7: Create stub `lib/phoenix_filament/resource/defaults.ex`** (full implementation in Task 8)
+- [x] **Step 7: Create stub `lib/phoenix_filament/resource/defaults.ex`** (full implementation in Task 8)
 
 ```elixir
 defmodule PhoenixFilament.Resource.Defaults do
@@ -1186,12 +1186,12 @@ defmodule PhoenixFilament.Resource.Defaults do
 end
 ```
 
-- [ ] **Step 8: Run tests to verify they pass**
+- [x] **Step 8: Run tests to verify they pass**
 
 Run: `mix test test/phoenix_filament/resource_test.exs`
 Expected: All tests pass
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add lib/phoenix_filament/resource.ex lib/phoenix_filament/resource/options.ex lib/phoenix_filament/resource/dsl.ex lib/phoenix_filament/resource/defaults.ex test/phoenix_filament/resource_test.exs test/support/fake_repo.ex
@@ -1206,7 +1206,7 @@ git commit -m "feat: add Resource macro with NimbleOptions and auto-discovery"
 - Modify: `lib/phoenix_filament/resource/dsl.ex`
 - Create: `test/phoenix_filament/resource/dsl_test.exs`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```elixir
 defmodule PhoenixFilament.Resource.DSLTest do
@@ -1351,12 +1351,12 @@ defmodule PhoenixFilament.Resource.DSLTest do
 end
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `mix test test/phoenix_filament/resource/dsl_test.exs`
 Expected: FAIL — field macros like `text_input` not available inside `form do...end`
 
-- [ ] **Step 3: Implement full `lib/phoenix_filament/resource/dsl.ex`**
+- [x] **Step 3: Implement full `lib/phoenix_filament/resource/dsl.ex`**
 
 ```elixir
 defmodule PhoenixFilament.Resource.DSL do
@@ -1450,12 +1450,12 @@ defmodule PhoenixFilament.Resource.DSL.TableColumns do
 end
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `mix test test/phoenix_filament/resource/dsl_test.exs`
 Expected: All tests pass
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/phoenix_filament/resource/dsl.ex test/phoenix_filament/resource/dsl_test.exs
@@ -1470,7 +1470,7 @@ git commit -m "feat: add DSL block macros for form and table field accumulation"
 - Create: `test/phoenix_filament/resource/defaults_test.exs`
 - Verify: `lib/phoenix_filament/resource/defaults.ex` (already implemented in Task 6)
 
-- [ ] **Step 1: Write tests for auto-discovery**
+- [x] **Step 1: Write tests for auto-discovery**
 
 ```elixir
 defmodule PhoenixFilament.Resource.DefaultsTest do
@@ -1559,12 +1559,12 @@ defmodule PhoenixFilament.Resource.DefaultsTest do
 end
 ```
 
-- [ ] **Step 2: Run tests to verify they pass** (implementation already exists from Task 6)
+- [x] **Step 2: Run tests to verify they pass** (implementation already exists from Task 6)
 
 Run: `mix test test/phoenix_filament/resource/defaults_test.exs`
 Expected: All tests pass (Defaults was already implemented as a non-stub in Task 6)
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add test/phoenix_filament/resource/defaults_test.exs
@@ -1580,7 +1580,7 @@ git commit -m "test: add auto-discovery defaults tests"
 
 This test validates the critical success criterion: touching an Ecto schema does NOT recompile the resource module.
 
-- [ ] **Step 1: Write the cascade test**
+- [x] **Step 1: Write the cascade test**
 
 ```elixir
 defmodule PhoenixFilament.Resource.CascadeTest do
@@ -1628,7 +1628,7 @@ defmodule PhoenixFilament.Resource.CascadeTest do
 end
 ```
 
-- [ ] **Step 2: Create the cascade test resource**
+- [x] **Step 2: Create the cascade test resource**
 
 Create `test/support/resources/cascade_resource.ex`:
 
@@ -1651,14 +1651,14 @@ defmodule PhoenixFilament.Test.Resources.CascadeResource do
 end
 ```
 
-- [ ] **Step 3: Run the cascade test**
+- [x] **Step 3: Run the cascade test**
 
 Run: `mix test test/phoenix_filament/resource/cascade_test.exs --include cascade`
 Expected: PASS — CascadeResource does NOT appear in recompile output
 
 If this test FAILS, it means `Macro.expand_literals/2` is not correctly preventing the compile-time dependency. Debug by running `mix xref trace test/support/resources/cascade_resource.ex` to see which dependencies are compile-time vs runtime.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add test/phoenix_filament/resource/cascade_test.exs test/support/resources/cascade_resource.ex
@@ -1673,27 +1673,27 @@ git commit -m "test: add compile-time cascade prevention validation"
 - Verify all existing tests pass together
 - Run formatter
 
-- [ ] **Step 1: Run the complete test suite**
+- [x] **Step 1: Run the complete test suite**
 
 Run: `mix test`
 Expected: All tests pass
 
-- [ ] **Step 2: Run the cascade test explicitly**
+- [x] **Step 2: Run the cascade test explicitly**
 
 Run: `mix test --include cascade`
 Expected: All tests pass including cascade test
 
-- [ ] **Step 3: Run the code formatter**
+- [x] **Step 3: Run the code formatter**
 
 Run: `mix format --check-formatted`
 Expected: All files formatted. If not, run `mix format` and commit the changes.
 
-- [ ] **Step 4: Verify clean compilation with no warnings**
+- [x] **Step 4: Verify clean compilation with no warnings**
 
 Run: `mix compile --warnings-as-errors`
 Expected: Clean compilation, zero warnings
 
-- [ ] **Step 5: Verify the zero-config resource works in IEx**
+- [x] **Step 5: Verify the zero-config resource works in IEx**
 
 Run: `iex -S mix`
 
@@ -1714,7 +1714,7 @@ CascadeResource.__resource__(:table_columns)
 # => %PhoenixFilament.Field{name: nil, type: nil, label: nil, opts: []}
 ```
 
-- [ ] **Step 6: Commit any final adjustments**
+- [x] **Step 6: Commit any final adjustments**
 
 ```bash
 git add -A
