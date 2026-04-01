@@ -10,10 +10,10 @@ defmodule PhoenixFilament.Resource.DSLTest do
         repo: PhoenixFilament.Test.FakeRepo
 
       form do
-        text_input :title, required: true, placeholder: "Enter title"
-        textarea :body, rows: 5
-        toggle :published
-        select :status, options: ~w(draft published archived)
+        text_input(:title, required: true, placeholder: "Enter title")
+        textarea(:body, rows: 5)
+        toggle(:published)
+        select(:status, options: ~w(draft published archived))
       end
     end
 
@@ -65,9 +65,9 @@ defmodule PhoenixFilament.Resource.DSLTest do
         repo: PhoenixFilament.Test.FakeRepo
 
       table do
-        column :title, sortable: true
-        column :published, badge: true
-        column :inserted_at, label: "Created"
+        column(:title, sortable: true)
+        column(:published, badge: true)
+        column(:inserted_at, label: "Created")
       end
     end
 
@@ -104,12 +104,12 @@ defmodule PhoenixFilament.Resource.DSLTest do
         repo: PhoenixFilament.Test.FakeRepo
 
       form do
-        text_input :title
-        textarea :body
+        text_input(:title)
+        textarea(:body)
       end
 
       table do
-        column :title, sortable: true
+        column(:title, sortable: true)
       end
     end
 
@@ -129,7 +129,7 @@ defmodule PhoenixFilament.Resource.DSLTest do
         repo: PhoenixFilament.Test.FakeRepo
 
       form do
-        text_input :title
+        text_input(:title)
       end
     end
 

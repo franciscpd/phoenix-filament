@@ -14,7 +14,8 @@ defmodule PhoenixFilament.MixProject do
       deps: deps(),
       name: "PhoenixFilament",
       source_url: @source_url,
-      description: "Rapid application development framework for Phoenix — declarative admin panels from Ecto schemas",
+      description:
+        "Rapid application development framework for Phoenix — declarative admin panels from Ecto schemas",
       package: package()
     ]
   end
