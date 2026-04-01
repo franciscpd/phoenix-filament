@@ -22,6 +22,7 @@ defmodule PhoenixFilament.Components do
       import PhoenixFilament.Components.Badge
       import PhoenixFilament.Components.Card
       import PhoenixFilament.Components.Modal
+      import PhoenixFilament.Components.Theme
       import PhoenixFilament.Components.FieldRenderer, only: [render_field: 1]
     end
   end

@@ -9,6 +9,7 @@ defmodule PhoenixFilament.Components.Card do
   attr(:class, :string, default: nil)
   attr(:rest, :global)
   slot(:header)
+  slot(:body)
   slot(:inner_block, required: true)
   slot(:footer)
 
@@ -20,7 +21,8 @@ defmodule PhoenixFilament.Components.Card do
           {render_slot(@header)}
         </div>
         <h3 :if={@title && @header == []} class="card-title">{@title}</h3>
-        {render_slot(@inner_block)}
+        <div :if={@body != []}>{render_slot(@body)}</div>
+        <div :if={@body == []}>{render_slot(@inner_block)}</div>
         <div :if={@footer != []} class="card-actions justify-end mt-4">
           {render_slot(@footer)}
         </div>

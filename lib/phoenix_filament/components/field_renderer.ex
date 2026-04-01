@@ -79,6 +79,8 @@ defmodule PhoenixFilament.Components.FieldRenderer do
   defp dispatch(:checkbox, assigns) do
     assigns =
       assigns
+      |> assign_new(:required, fn -> false end)
+      |> assign_new(:disabled, fn -> false end)
       |> assign_new(:class, fn -> nil end)
 
     checkbox(assigns)
@@ -87,6 +89,8 @@ defmodule PhoenixFilament.Components.FieldRenderer do
   defp dispatch(:toggle, assigns) do
     assigns =
       assigns
+      |> assign_new(:required, fn -> false end)
+      |> assign_new(:disabled, fn -> false end)
       |> assign_new(:class, fn -> nil end)
 
     toggle(assigns)
@@ -117,6 +121,12 @@ defmodule PhoenixFilament.Components.FieldRenderer do
   end
 
   defp dispatch(:hidden, assigns), do: hidden(assigns)
+
+  defp dispatch(type, _assigns) do
+    raise ArgumentError,
+          "unsupported field type #{inspect(type)}. " <>
+            "Supported types: :text_input, :textarea, :number_input, :select, :checkbox, :toggle, :date, :datetime, :hidden"
+  end
 
   defp merge_field_opts(assigns, opts) do
     Enum.reduce(opts, assigns, fn {key, value}, acc ->

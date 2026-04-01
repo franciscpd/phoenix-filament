@@ -82,7 +82,7 @@ defmodule PhoenixFilament.Components.Input do
   attr(:placeholder, :string, default: nil)
   attr(:min, :integer, default: nil)
   attr(:max, :integer, default: nil)
-  attr(:step, :integer, default: nil)
+  attr(:step, :any, default: nil)
   attr(:required, :boolean, default: false)
   attr(:disabled, :boolean, default: false)
   attr(:class, :string, default: nil)
@@ -152,6 +152,8 @@ defmodule PhoenixFilament.Components.Input do
 
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
+  attr(:required, :boolean, default: false)
+  attr(:disabled, :boolean, default: false)
   attr(:class, :string, default: nil)
   attr(:rest, :global)
 
@@ -166,10 +168,14 @@ defmodule PhoenixFilament.Components.Input do
           name={@field.name}
           value="true"
           checked={Phoenix.HTML.Form.normalize_value("checkbox", @field.value)}
+          disabled={@disabled}
           class={["checkbox", @class]}
           {@rest}
         />
-        <span :if={@label} class="label-text">{@label}</span>
+        <span :if={@label} class="label-text">
+          {@label}
+          <span :if={@required} class="text-error">*</span>
+        </span>
       </label>
       <.field_errors field={@field} />
     </div>
@@ -180,6 +186,8 @@ defmodule PhoenixFilament.Components.Input do
 
   attr(:field, Phoenix.HTML.FormField, required: true)
   attr(:label, :string, default: nil)
+  attr(:required, :boolean, default: false)
+  attr(:disabled, :boolean, default: false)
   attr(:class, :string, default: nil)
   attr(:rest, :global)
 
@@ -194,10 +202,14 @@ defmodule PhoenixFilament.Components.Input do
           name={@field.name}
           value="true"
           checked={Phoenix.HTML.Form.normalize_value("checkbox", @field.value)}
+          disabled={@disabled}
           class={["toggle", @class]}
           {@rest}
         />
-        <span :if={@label} class="label-text">{@label}</span>
+        <span :if={@label} class="label-text">
+          {@label}
+          <span :if={@required} class="text-error">*</span>
+        </span>
       </label>
       <.field_errors field={@field} />
     </div>
@@ -226,7 +238,7 @@ defmodule PhoenixFilament.Components.Input do
         type="date"
         id={@field.id}
         name={@field.name}
-        value={@field.value}
+        value={normalize_date(@field.value)}
         min={@min}
         max={@max}
         disabled={@disabled}
@@ -261,7 +273,7 @@ defmodule PhoenixFilament.Components.Input do
         type="datetime-local"
         id={@field.id}
         name={@field.name}
-        value={@field.value}
+        value={normalize_datetime(@field.value)}
         min={@min}
         max={@max}
         disabled={@disabled}
@@ -295,14 +307,26 @@ defmodule PhoenixFilament.Components.Input do
 
   defp field_errors(assigns) do
     ~H"""
-    <p
-      :for={error <- @field.errors}
-      id={"#{@field.id}-error"}
-      role="alert"
-      class="text-error text-sm mt-1"
-    >
-      {error}
-    </p>
+    <div :if={@field.errors != []} id={"#{@field.id}-error"}>
+      <p
+        :for={error <- @field.errors}
+        role="alert"
+        class="text-error text-sm mt-1"
+      >
+        {error}
+      </p>
+    </div>
     """
   end
+
+  defp normalize_date(%Date{} = date), do: Date.to_iso8601(date)
+  defp normalize_date(value), do: value
+
+  defp normalize_datetime(%NaiveDateTime{} = dt),
+    do: NaiveDateTime.to_iso8601(dt) |> String.slice(0, 16)
+
+  defp normalize_datetime(%DateTime{} = dt),
+    do: DateTime.to_naive(dt) |> normalize_datetime()
+
+  defp normalize_datetime(value), do: value
 end
