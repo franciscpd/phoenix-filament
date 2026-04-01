@@ -49,7 +49,7 @@ defmodule PhoenixFilament.Form.FormBuilder do
 
   defp render_items(assigns) do
     ~H"""
-    <div :for={item <- @items} class="mb-4">
+    <div :for={item <- @items}>
       <.render_item item={item} form={@form} />
     </div>
     """
@@ -61,7 +61,11 @@ defmodule PhoenixFilament.Form.FormBuilder do
   defp render_item(%{item: %Field{opts: opts} = field} = assigns) do
     case Keyword.get(opts, :visible_when) do
       nil ->
-        ~H"<.render_field pf_field={@item} form={@form} />"
+        ~H"""
+        <div class="mb-4">
+          <.render_field pf_field={@item} form={@form} />
+        </div>
+        """
 
       condition ->
         vis = PhoenixFilament.Form.Visibility.attrs(condition, assigns.form, field.name)
@@ -69,6 +73,7 @@ defmodule PhoenixFilament.Form.FormBuilder do
 
         ~H"""
         <div
+          class="mb-4"
           id={@vis.id}
           style={@vis.style}
           phx-hook={@vis[:"phx-hook"]}

@@ -94,4 +94,46 @@ defmodule PhoenixFilament.Form.VisibilityTest do
       assert html =~ ~s(data-expected="admin,super")
     end
   end
+
+  describe "visible_when with :not_in operator" do
+    test "serializes list values and uses not_in operator" do
+      form = post_form(%{"role" => ""})
+
+      schema = [
+        Field.select(:role, options: ["user", "admin", "super"]),
+        Field.text_input(:user_note, visible_when: {:role, :not_in, ["admin", "super"]})
+      ]
+
+      assigns = %{form: form, schema: schema}
+
+      html =
+        rendered_to_string(~H"""
+        <FormBuilder.form_builder form={@form} schema={@schema} submit={false} />
+        """)
+
+      assert html =~ ~s(data-operator="not_in")
+      assert html =~ ~s(data-expected="admin,super")
+    end
+  end
+
+  describe "visible_when with :neq operator" do
+    test "renders neq operator data attr" do
+      form = post_form(%{"status" => ""})
+
+      schema = [
+        Field.select(:status, options: ["active", "archived"]),
+        Field.text_input(:archive_note, visible_when: {:status, :neq, "active"})
+      ]
+
+      assigns = %{form: form, schema: schema}
+
+      html =
+        rendered_to_string(~H"""
+        <FormBuilder.form_builder form={@form} schema={@schema} submit={false} />
+        """)
+
+      assert html =~ ~s(data-operator="neq")
+      assert html =~ ~s(data-expected="active")
+    end
+  end
 end

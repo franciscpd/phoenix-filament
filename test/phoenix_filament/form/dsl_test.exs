@@ -2,7 +2,7 @@ defmodule PhoenixFilament.Form.DSLTest do
   use ExUnit.Case, async: true
 
   alias PhoenixFilament.Field
-  alias PhoenixFilament.Form.{Section, Columns}
+  alias PhoenixFilament.Form.{Section, Columns, Schema}
 
   describe "form DSL with section/2" do
     test "section wraps fields in Section struct" do
@@ -130,6 +130,40 @@ defmodule PhoenixFilament.Form.DSLTest do
       schema = FieldVisibilityResource.__resource__(:form_schema)
       assert [%Field{name: :published}, %Field{name: :published_at, opts: opts}] = schema
       assert opts[:visible_when] == {:published, :eq, true}
+    end
+  end
+
+  describe "Schema.extract_fields/1" do
+    test "extracts flat fields from nested schema" do
+      schema = [
+        Field.text_input(:title),
+        %Section{
+          label: "Details",
+          items: [
+            %Columns{
+              count: 2,
+              items: [
+                Field.text_input(:first),
+                Field.text_input(:last)
+              ]
+            },
+            Field.textarea(:bio)
+          ]
+        }
+      ]
+
+      fields = Schema.extract_fields(schema)
+
+      assert length(fields) == 4
+      assert Enum.map(fields, & &1.name) == [:title, :first, :last, :bio]
+    end
+
+    test "returns flat list unchanged" do
+      schema = [Field.text_input(:title), Field.textarea(:body)]
+      fields = Schema.extract_fields(schema)
+
+      assert length(fields) == 2
+      assert Enum.map(fields, & &1.name) == [:title, :body]
     end
   end
 

@@ -2,17 +2,18 @@ defmodule PhoenixFilament.Form.Hooks do
   @moduledoc """
   JavaScript hooks for PhoenixFilament Form Builder.
 
-  Register these hooks in your LiveView socket configuration:
+  The PFVisibility hook enables client-side conditional field visibility.
+  To use it, add the hook to your LiveSocket configuration in your app.js:
 
-      # In app.js:
-      import { getHooks } from "phoenix_filament"
+      // In assets/js/app.js:
+      Hooks.PFVisibility = {
+        // Copy the output of PhoenixFilament.Form.Hooks.visibility_hook_js()
+        // or use the installer (Phase 8) which sets this up automatically
+      }
+
       let liveSocket = new LiveSocket("/live", Socket, {
-        hooks: { ...getHooks(), ...Hooks }
+        hooks: { ...Hooks }
       })
-
-  Or copy the hook manually:
-
-      const PFVisibility = PhoenixFilament.Form.Hooks.visibility_hook_js()
   """
 
   @visibility_hook_js ~S"""
@@ -21,7 +22,7 @@ defmodule PhoenixFilament.Form.Hooks do
       const controlling = document.getElementById(this.el.dataset.controllingId)
       if (!controlling) return
 
-      const evaluate = () => {
+      this._evaluate = () => {
         const op = this.el.dataset.operator
         const expected = this.el.dataset.expected
         const actual = controlling.type === "checkbox"
@@ -37,9 +38,16 @@ defmodule PhoenixFilament.Form.Hooks do
         this.el.style.display = match ? "" : "none"
       }
 
-      controlling.addEventListener("input", evaluate)
-      controlling.addEventListener("change", evaluate)
-      evaluate()
+      this._controlling = controlling
+      controlling.addEventListener("input", this._evaluate)
+      controlling.addEventListener("change", this._evaluate)
+      this._evaluate()
+    },
+    destroyed() {
+      if (this._controlling && this._evaluate) {
+        this._controlling.removeEventListener("input", this._evaluate)
+        this._controlling.removeEventListener("change", this._evaluate)
+      }
     }
   }
   """

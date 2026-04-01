@@ -8,7 +8,7 @@ defmodule PhoenixFilament.Form.Visibility do
   """
 
   @doc """
-  Builds a map of HTML attributes for a visibility wrapper `<div>`.
+  Returns visibility data attrs for a given visible_when condition and form.
 
   The wrapper starts hidden (`display:none`) and the `PFVisibility` JS hook
   evaluates the condition on page load and on subsequent input events.
@@ -21,9 +21,10 @@ defmodule PhoenixFilament.Form.Visibility do
 
   ## Operators
 
-    - `:eq` — show when field value equals expected value
-    - `:neq` — show when field value differs from expected value
-    - `:in` — show when field value is one of a list of expected values
+    - `:eq` — show when field value equals expected (scalar)
+    - `:neq` — show when field value does not equal expected (scalar)
+    - `:in` — show when field value is in expected list (list of strings)
+    - `:not_in` — show when field value is not in expected list (list of strings)
   """
   @spec attrs({atom(), atom(), any()}, Phoenix.HTML.Form.t(), atom() | String.t()) :: map()
   def attrs({controlling_field, operator, value}, form, target_name) do
