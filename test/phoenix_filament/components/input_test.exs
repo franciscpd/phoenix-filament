@@ -178,4 +178,174 @@ defmodule PhoenixFilament.Components.InputTest do
       assert html =~ ~s(step="1")
     end
   end
+
+  describe "select/1" do
+    test "renders select with daisyUI classes" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.select
+          field={form_field(%{"status" => "draft"}, :status)}
+          options={[{"Draft", "draft"}, {"Published", "published"}]}
+        />
+        """)
+
+      assert html =~ "<select"
+      assert html =~ "select select-bordered"
+      assert html =~ "<option"
+      assert html =~ "Draft"
+    end
+
+    test "renders prompt option" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.select
+          field={form_field(%{}, :status)}
+          options={[{"Draft", "draft"}]}
+          prompt="Choose status"
+        />
+        """)
+
+      assert html =~ "Choose status"
+    end
+
+    test "renders string options" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.select
+          field={form_field(%{"status" => "draft"}, :status)}
+          options={["draft", "published", "archived"]}
+        />
+        """)
+
+      assert html =~ "draft"
+      assert html =~ "published"
+    end
+
+    test "marks selected option" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.select
+          field={form_field(%{"status" => "published"}, :status)}
+          options={[{"Draft", "draft"}, {"Published", "published"}]}
+        />
+        """)
+
+      assert html =~ ~s(selected)
+    end
+  end
+
+  describe "checkbox/1" do
+    test "renders checkbox with daisyUI classes" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.checkbox field={form_field(%{"published" => "true"}, :published)} />
+        """)
+
+      assert html =~ ~s(type="checkbox")
+      assert html =~ "checkbox"
+    end
+
+    test "renders label" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.checkbox field={form_field(%{}, :published)} label="Published" />
+        """)
+
+      assert html =~ "Published"
+    end
+  end
+
+  describe "toggle/1" do
+    test "renders toggle with daisyUI classes" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.toggle field={form_field(%{"active" => "true"}, :active)} />
+        """)
+
+      assert html =~ ~s(type="checkbox")
+      assert html =~ "toggle"
+    end
+
+    test "renders label" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.toggle field={form_field(%{}, :active)} label="Active" />
+        """)
+
+      assert html =~ "Active"
+    end
+  end
+
+  describe "date/1" do
+    test "renders native date input with daisyUI classes" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.date field={form_field(%{"published_at" => "2026-04-01"}, :published_at)} />
+        """)
+
+      assert html =~ ~s(type="date")
+      assert html =~ "input input-bordered"
+      assert html =~ ~s(value="2026-04-01")
+    end
+
+    test "renders with min and max" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.date field={form_field(%{}, :published_at)} min="2026-01-01" max="2026-12-31" />
+        """)
+
+      assert html =~ ~s(min="2026-01-01")
+      assert html =~ ~s(max="2026-12-31")
+    end
+  end
+
+  describe "datetime/1" do
+    test "renders native datetime-local input" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.datetime field={form_field(%{"starts_at" => "2026-04-01T10:30"}, :starts_at)} />
+        """)
+
+      assert html =~ ~s(type="datetime-local")
+      assert html =~ "input input-bordered"
+    end
+  end
+
+  describe "hidden/1" do
+    test "renders hidden input with no wrapper" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <Input.hidden field={form_field(%{"id" => "42"}, :id)} />
+        """)
+
+      assert html =~ ~s(type="hidden")
+      assert html =~ ~s(value="42")
+      refute html =~ "<label"
+      refute html =~ "input-bordered"
+    end
+  end
 end

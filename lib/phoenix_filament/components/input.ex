@@ -114,6 +114,183 @@ defmodule PhoenixFilament.Components.Input do
     """
   end
 
+  # --- select/1 ---
+
+  attr(:field, Phoenix.HTML.FormField, required: true)
+  attr(:label, :string, default: nil)
+  attr(:options, :list, required: true)
+  attr(:prompt, :string, default: nil)
+  attr(:required, :boolean, default: false)
+  attr(:disabled, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  def select(assigns) do
+    ~H"""
+    <div>
+      <label :if={@label} for={@field.id} class="label">
+        <span>{@label}</span>
+        <span :if={@required} class="text-error">*</span>
+      </label>
+      <select
+        id={@field.id}
+        name={@field.name}
+        disabled={@disabled}
+        aria-describedby={@field.errors != [] && "#{@field.id}-error"}
+        class={["select select-bordered w-full", @field.errors != [] && "select-error", @class]}
+        {@rest}
+      >
+        <option :if={@prompt} value="">{@prompt}</option>
+        {Phoenix.HTML.Form.options_for_select(@options, @field.value)}
+      </select>
+      <.field_errors field={@field} />
+    </div>
+    """
+  end
+
+  # --- checkbox/1 ---
+
+  attr(:field, Phoenix.HTML.FormField, required: true)
+  attr(:label, :string, default: nil)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  def checkbox(assigns) do
+    ~H"""
+    <div class="form-control">
+      <label class="label cursor-pointer gap-2">
+        <input type="hidden" name={@field.name} value="false" />
+        <input
+          type="checkbox"
+          id={@field.id}
+          name={@field.name}
+          value="true"
+          checked={Phoenix.HTML.Form.normalize_value("checkbox", @field.value)}
+          class={["checkbox", @class]}
+          {@rest}
+        />
+        <span :if={@label} class="label-text">{@label}</span>
+      </label>
+      <.field_errors field={@field} />
+    </div>
+    """
+  end
+
+  # --- toggle/1 ---
+
+  attr(:field, Phoenix.HTML.FormField, required: true)
+  attr(:label, :string, default: nil)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  def toggle(assigns) do
+    ~H"""
+    <div class="form-control">
+      <label class="label cursor-pointer gap-2">
+        <input type="hidden" name={@field.name} value="false" />
+        <input
+          type="checkbox"
+          id={@field.id}
+          name={@field.name}
+          value="true"
+          checked={Phoenix.HTML.Form.normalize_value("checkbox", @field.value)}
+          class={["toggle", @class]}
+          {@rest}
+        />
+        <span :if={@label} class="label-text">{@label}</span>
+      </label>
+      <.field_errors field={@field} />
+    </div>
+    """
+  end
+
+  # --- date/1 ---
+
+  attr(:field, Phoenix.HTML.FormField, required: true)
+  attr(:label, :string, default: nil)
+  attr(:min, :string, default: nil)
+  attr(:max, :string, default: nil)
+  attr(:required, :boolean, default: false)
+  attr(:disabled, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  def date(assigns) do
+    ~H"""
+    <div>
+      <label :if={@label} for={@field.id} class="label">
+        <span>{@label}</span>
+        <span :if={@required} class="text-error">*</span>
+      </label>
+      <input
+        type="date"
+        id={@field.id}
+        name={@field.name}
+        value={@field.value}
+        min={@min}
+        max={@max}
+        disabled={@disabled}
+        aria-describedby={@field.errors != [] && "#{@field.id}-error"}
+        class={["input input-bordered w-full", @field.errors != [] && "input-error", @class]}
+        {@rest}
+      />
+      <.field_errors field={@field} />
+    </div>
+    """
+  end
+
+  # --- datetime/1 ---
+
+  attr(:field, Phoenix.HTML.FormField, required: true)
+  attr(:label, :string, default: nil)
+  attr(:min, :string, default: nil)
+  attr(:max, :string, default: nil)
+  attr(:required, :boolean, default: false)
+  attr(:disabled, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  def datetime(assigns) do
+    ~H"""
+    <div>
+      <label :if={@label} for={@field.id} class="label">
+        <span>{@label}</span>
+        <span :if={@required} class="text-error">*</span>
+      </label>
+      <input
+        type="datetime-local"
+        id={@field.id}
+        name={@field.name}
+        value={@field.value}
+        min={@min}
+        max={@max}
+        disabled={@disabled}
+        aria-describedby={@field.errors != [] && "#{@field.id}-error"}
+        class={["input input-bordered w-full", @field.errors != [] && "input-error", @class]}
+        {@rest}
+      />
+      <.field_errors field={@field} />
+    </div>
+    """
+  end
+
+  # --- hidden/1 ---
+
+  attr(:field, Phoenix.HTML.FormField, required: true)
+  attr(:rest, :global)
+
+  def hidden(assigns) do
+    ~H"""
+    <input
+      type="hidden"
+      id={@field.id}
+      name={@field.name}
+      value={@field.value}
+      {@rest}
+    />
+    """
+  end
+
   # --- shared error rendering ---
 
   defp field_errors(assigns) do
