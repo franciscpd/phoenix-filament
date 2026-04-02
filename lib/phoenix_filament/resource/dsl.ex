@@ -185,4 +185,88 @@ defmodule PhoenixFilament.Resource.DSL.TableColumns do
       @_phx_filament_table_columns PhoenixFilament.Column.column(unquote(name), unquote(opts))
     end
   end
+
+  defmacro actions(do: block) do
+    quote do
+      import PhoenixFilament.Resource.DSL.TableActions
+      unquote(block)
+      import PhoenixFilament.Resource.DSL.TableActions, only: []
+    end
+  end
+
+  defmacro filters(do: block) do
+    quote do
+      import PhoenixFilament.Resource.DSL.TableFilters
+      unquote(block)
+      import PhoenixFilament.Resource.DSL.TableFilters, only: []
+    end
+  end
+end
+
+defmodule PhoenixFilament.Resource.DSL.TableActions do
+  @moduledoc false
+
+  defmacro action(type, opts \\ []) do
+    quote do
+      @_phx_filament_table_actions %PhoenixFilament.Table.Action{
+        type: unquote(type),
+        label: Keyword.get(unquote(opts), :label),
+        confirm: Keyword.get(unquote(opts), :confirm),
+        icon: Keyword.get(unquote(opts), :icon)
+      }
+    end
+  end
+end
+
+defmodule PhoenixFilament.Resource.DSL.TableFilters do
+  @moduledoc false
+
+  defmacro select_filter(field, opts \\ []) do
+    quote do
+      @_phx_filament_table_filters %PhoenixFilament.Table.Filter{
+        type: :select,
+        field: unquote(field),
+        label:
+          Keyword.get(
+            unquote(opts),
+            :label,
+            PhoenixFilament.Naming.humanize(unquote(field))
+          ),
+        options: Keyword.get(unquote(opts), :options, []),
+        composition: Keyword.get(unquote(opts), :composition, :and)
+      }
+    end
+  end
+
+  defmacro boolean_filter(field, opts \\ []) do
+    quote do
+      @_phx_filament_table_filters %PhoenixFilament.Table.Filter{
+        type: :boolean,
+        field: unquote(field),
+        label:
+          Keyword.get(
+            unquote(opts),
+            :label,
+            PhoenixFilament.Naming.humanize(unquote(field))
+          ),
+        composition: Keyword.get(unquote(opts), :composition, :and)
+      }
+    end
+  end
+
+  defmacro date_filter(field, opts \\ []) do
+    quote do
+      @_phx_filament_table_filters %PhoenixFilament.Table.Filter{
+        type: :date_range,
+        field: unquote(field),
+        label:
+          Keyword.get(
+            unquote(opts),
+            :label,
+            PhoenixFilament.Naming.humanize(unquote(field))
+          ),
+        composition: Keyword.get(unquote(opts), :composition, :and)
+      }
+    end
+  end
 end

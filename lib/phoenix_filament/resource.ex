@@ -15,12 +15,21 @@ defmodule PhoenixFilament.Resource do
   #{NimbleOptions.docs(PhoenixFilament.Resource.Options.schema())}
   """
 
-  @valid_resource_keys [:schema, :repo, :opts, :form_fields, :form_schema, :table_columns]
+  @valid_resource_keys [
+    :schema,
+    :repo,
+    :opts,
+    :form_fields,
+    :form_schema,
+    :table_columns,
+    :table_actions,
+    :table_filters
+  ]
 
   @doc """
   Callback to retrieve resource metadata.
 
-  Valid keys: #{inspect([:schema, :repo, :opts, :form_fields, :form_schema, :table_columns])}
+  Valid keys: #{inspect([:schema, :repo, :opts, :form_fields, :form_schema, :table_columns, :table_actions, :table_filters])}
   """
   @callback __resource__(:schema) :: module()
   @callback __resource__(:repo) :: module()
@@ -33,6 +42,8 @@ defmodule PhoenixFilament.Resource do
                 | PhoenixFilament.Form.Columns.t()
               ]
   @callback __resource__(:table_columns) :: [PhoenixFilament.Column.t()]
+  @callback __resource__(:table_actions) :: [PhoenixFilament.Table.Action.t()]
+  @callback __resource__(:table_filters) :: [PhoenixFilament.Table.Filter.t()]
 
   defmacro __using__(opts) do
     schema_mod =
@@ -57,6 +68,8 @@ defmodule PhoenixFilament.Resource do
 
       Module.register_attribute(__MODULE__, :_phx_filament_form_fields, accumulate: true)
       Module.register_attribute(__MODULE__, :_phx_filament_table_columns, accumulate: true)
+      Module.register_attribute(__MODULE__, :_phx_filament_table_actions, accumulate: true)
+      Module.register_attribute(__MODULE__, :_phx_filament_table_filters, accumulate: true)
 
       @_phx_filament_form_schema nil
       @_phx_filament_form_context nil
@@ -101,6 +114,14 @@ defmodule PhoenixFilament.Resource do
           [] -> PhoenixFilament.Resource.Defaults.table_columns(@_phx_filament_schema)
           columns -> columns
         end
+      end
+
+      def __resource__(:table_actions) do
+        @_phx_filament_table_actions |> Enum.reverse()
+      end
+
+      def __resource__(:table_filters) do
+        @_phx_filament_table_filters |> Enum.reverse()
       end
 
       def __resource__(key) do
