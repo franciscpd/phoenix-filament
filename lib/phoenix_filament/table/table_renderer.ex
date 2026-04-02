@@ -183,6 +183,7 @@ defmodule PhoenixFilament.Table.TableRenderer do
         target={@myself}
       />
   """
+  attr(:id, :string, default: nil)
   attr(:row, :map, required: true)
   attr(:columns, :list, required: true)
   attr(:actions, :list, required: true)
@@ -190,7 +191,7 @@ defmodule PhoenixFilament.Table.TableRenderer do
 
   def table_row(assigns) do
     ~H"""
-    <tr class="hover">
+    <tr id={@id} class="hover">
       <%= for col <- @columns do %>
         <td>{render_cell(col, @row)}</td>
       <% end %>
