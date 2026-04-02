@@ -184,8 +184,7 @@ defmodule PhoenixFilament.Resource.Lifecycle do
 
   @doc "Handles table patch messages (URL state sync)."
   def handle_table_patch(socket, params) do
-    {:noreply,
-     Phoenix.LiveView.push_patch(socket, to: index_path_with_params(socket, params))}
+    {:noreply, Phoenix.LiveView.push_patch(socket, to: index_path_with_params(socket, params))}
   end
 
   @doc "Returns the index path for the resource. Public for use in injected callbacks."
