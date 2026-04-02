@@ -216,12 +216,20 @@ defmodule PhoenixFilament.Resource.Lifecycle do
 
   defp resolve_changeset_fn(socket, :create) do
     opts = socket.assigns.opts
-    opts[:create_changeset] || default_changeset_fn(socket.assigns.schema)
+
+    case opts[:create_changeset] do
+      {mod, fun} -> fn struct, params -> apply(mod, fun, [struct, params]) end
+      nil -> default_changeset_fn(socket.assigns.schema)
+    end
   end
 
   defp resolve_changeset_fn(socket, :update) do
     opts = socket.assigns.opts
-    opts[:update_changeset] || default_changeset_fn(socket.assigns.schema)
+
+    case opts[:update_changeset] do
+      {mod, fun} -> fn struct, params -> apply(mod, fun, [struct, params]) end
+      nil -> default_changeset_fn(socket.assigns.schema)
+    end
   end
 
   defp default_changeset_fn(schema) do

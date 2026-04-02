@@ -11,29 +11,24 @@ defmodule PhoenixFilament.Resource.OptionsExtendedTest do
       assert validated[:create_changeset] == nil
     end
 
-    test "accepts a 2-arity function" do
-      fun = fn record, params -> {record, params} end
-
-      {:ok, validated} =
-        NimbleOptions.validate(@required_opts ++ [create_changeset: fun], Options.schema())
-
-      assert validated[:create_changeset] == fun
+    test "accepts {Module, :function} tuple" do
+      opts = @required_opts ++ [create_changeset: {MyApp.Post, :create_changeset}]
+      assert {:ok, validated} = NimbleOptions.validate(opts, Options.schema())
+      assert validated[:create_changeset] == {MyApp.Post, :create_changeset}
     end
 
-    test "rejects non-function values" do
+    test "rejects non-tuple non-nil values" do
       assert {:error, _} =
                NimbleOptions.validate(
-                 @required_opts ++ [create_changeset: :not_a_function],
+                 @required_opts ++ [create_changeset: :not_valid],
                  Options.schema()
                )
     end
 
-    test "rejects a 1-arity function" do
-      fun = fn _record -> :ok end
-
+    test "rejects string values" do
       assert {:error, _} =
                NimbleOptions.validate(
-                 @required_opts ++ [create_changeset: fun],
+                 @required_opts ++ [create_changeset: "not_valid"],
                  Options.schema()
                )
     end
@@ -52,16 +47,13 @@ defmodule PhoenixFilament.Resource.OptionsExtendedTest do
       assert validated[:update_changeset] == nil
     end
 
-    test "accepts a 2-arity function" do
-      fun = fn record, params -> {record, params} end
-
-      {:ok, validated} =
-        NimbleOptions.validate(@required_opts ++ [update_changeset: fun], Options.schema())
-
-      assert validated[:update_changeset] == fun
+    test "accepts {Module, :function} tuple" do
+      opts = @required_opts ++ [update_changeset: {MyApp.Post, :update_changeset}]
+      assert {:ok, validated} = NimbleOptions.validate(opts, Options.schema())
+      assert validated[:update_changeset] == {MyApp.Post, :update_changeset}
     end
 
-    test "rejects non-function values" do
+    test "rejects non-tuple non-nil values" do
       assert {:error, _} =
                NimbleOptions.validate(
                  @required_opts ++ [update_changeset: "not_a_function"],
@@ -69,12 +61,10 @@ defmodule PhoenixFilament.Resource.OptionsExtendedTest do
                )
     end
 
-    test "rejects a 3-arity function" do
-      fun = fn _a, _b, _c -> :ok end
-
+    test "rejects atom values" do
       assert {:error, _} =
                NimbleOptions.validate(
-                 @required_opts ++ [update_changeset: fun],
+                 @required_opts ++ [update_changeset: :bad_value],
                  Options.schema()
                )
     end

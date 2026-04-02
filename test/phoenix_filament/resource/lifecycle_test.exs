@@ -31,7 +31,18 @@ defmodule PhoenixFilament.Resource.LifecycleTest do
     def __resource__(:table_filters), do: []
   end
 
-  # Mock resource with custom create_changeset
+  # Helper module with named changeset functions (compile-time safe, no anonymous functions)
+  defmodule CustomChangesets do
+    def create_changeset(struct, params) do
+      Ecto.Changeset.cast(struct, params, [:title])
+    end
+
+    def update_changeset(record, params) do
+      Ecto.Changeset.cast(record, params, [:title, :body])
+    end
+  end
+
+  # Mock resource with custom create_changeset using {Module, :function} tuples
   defmodule CustomChangesetResource do
     def __resource__(:schema), do: TestSchema
     def __resource__(:repo), do: PhoenixFilament.Test.FakeRepo
@@ -39,12 +50,10 @@ defmodule PhoenixFilament.Resource.LifecycleTest do
     def __resource__(:opts) do
       [
         label: "Article",
-        create_changeset: fn struct, params ->
-          Ecto.Changeset.cast(struct, params, [:title])
-        end,
-        update_changeset: fn record, params ->
-          Ecto.Changeset.cast(record, params, [:title, :body])
-        end
+        create_changeset:
+          {PhoenixFilament.Resource.LifecycleTest.CustomChangesets, :create_changeset},
+        update_changeset:
+          {PhoenixFilament.Resource.LifecycleTest.CustomChangesets, :update_changeset}
       ]
     end
 

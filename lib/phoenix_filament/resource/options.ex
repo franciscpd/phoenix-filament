@@ -11,16 +11,16 @@ defmodule PhoenixFilament.Resource.Options do
             plural_label: [type: :string, doc: "Plural form of label"],
             icon: [type: :string, doc: "Icon name for panel navigation"],
             create_changeset: [
-              type: {:or, [{:fun, 2}, nil]},
+              type: {:or, [{:tuple, [:atom, :atom]}, nil]},
               default: nil,
               doc:
-                "Optional 2-arity function (record, params) used to build the changeset on create. Defaults to nil (auto-inferred or schema default)."
+                "Changeset function as `{Module, :function_name}` tuple for create. Called as Module.function_name(struct, params). Default: `{schema, :changeset}`"
             ],
             update_changeset: [
-              type: {:or, [{:fun, 2}, nil]},
+              type: {:or, [{:tuple, [:atom, :atom]}, nil]},
               default: nil,
               doc:
-                "Optional 2-arity function (record, params) used to build the changeset on update. Defaults to nil (auto-inferred or schema default)."
+                "Changeset function as `{Module, :function_name}` tuple for update. Called as Module.function_name(record, params). Default: `{schema, :changeset}`"
             ]
           )
 
