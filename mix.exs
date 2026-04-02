@@ -36,6 +36,7 @@ defmodule PhoenixFilament.MixProject do
       {:phoenix, "~> 1.7", optional: true},
       {:phoenix_live_view, "~> 1.0", optional: true},
       {:phoenix_html, "~> 4.1", optional: true},
+      {:phoenix_ecto, "~> 4.4", optional: true},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false}
     ]
   end
