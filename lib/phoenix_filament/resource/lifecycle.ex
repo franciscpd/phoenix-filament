@@ -163,15 +163,25 @@ defmodule PhoenixFilament.Resource.Lifecycle do
     record = CRUD.get!(socket.assigns.schema, socket.assigns.repo, id)
 
     Authorize.authorize!(resource, :delete, record, user)
-    {:ok, _} = CRUD.delete(record, socket.assigns.repo)
 
-    {:noreply,
-     socket
-     |> Phoenix.LiveView.put_flash(
-       :info,
-       "#{singular_label(socket)} deleted successfully"
-     )
-     |> Phoenix.LiveView.push_patch(to: index_path(socket))}
+    case CRUD.delete(record, socket.assigns.repo) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> Phoenix.LiveView.put_flash(
+           :info,
+           "#{singular_label(socket)} deleted successfully"
+         )
+         |> Phoenix.LiveView.push_patch(to: index_path(socket))}
+
+      {:error, _changeset} ->
+        {:noreply,
+         Phoenix.LiveView.put_flash(
+           socket,
+           :error,
+           "Failed to delete #{singular_label(socket)}"
+         )}
+    end
   rescue
     PhoenixFilament.Resource.UnauthorizedError ->
       {:noreply,

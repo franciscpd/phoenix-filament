@@ -86,57 +86,8 @@ defmodule PhoenixFilament.Resource do
 
       @_phx_filament_schema unquote(schema_mod)
       @_phx_filament_repo unquote(repo_mod)
-    end
-  end
 
-  defmacro __before_compile__(_env) do
-    quote do
-      def __resource__(:schema), do: @_phx_filament_schema
-      def __resource__(:repo), do: @_phx_filament_repo
-      def __resource__(:opts), do: @_phx_filament_opts
-
-      def __resource__(:form_schema) do
-        case @_phx_filament_form_schema do
-          nil -> PhoenixFilament.Resource.Defaults.form_fields(@_phx_filament_schema)
-          schema -> schema
-        end
-      end
-
-      def __resource__(:form_fields) do
-        case @_phx_filament_form_schema do
-          nil ->
-            case @_phx_filament_form_fields |> Enum.reverse() do
-              [] -> PhoenixFilament.Resource.Defaults.form_fields(@_phx_filament_schema)
-              fields -> fields
-            end
-
-          schema ->
-            PhoenixFilament.Form.Schema.extract_fields(schema)
-        end
-      end
-
-      def __resource__(:table_columns) do
-        case @_phx_filament_table_columns |> Enum.reverse() do
-          [] -> PhoenixFilament.Resource.Defaults.table_columns(@_phx_filament_schema)
-          columns -> columns
-        end
-      end
-
-      def __resource__(:table_actions) do
-        @_phx_filament_table_actions |> Enum.reverse()
-      end
-
-      def __resource__(:table_filters) do
-        @_phx_filament_table_filters |> Enum.reverse()
-      end
-
-      def __resource__(key) do
-        raise ArgumentError,
-              "unknown resource key #{inspect(key)}. " <>
-                "Valid keys are: #{inspect(unquote(Macro.escape(@valid_resource_keys)))}"
-      end
-
-      # --- LiveView thin callbacks ---
+      # --- Default LiveView callbacks (overridable) ---
 
       @impl Phoenix.LiveView
       def mount(_params, _session, socket) do
@@ -189,6 +140,61 @@ defmodule PhoenixFilament.Resource do
       @impl Phoenix.LiveView
       def render(assigns) do
         PhoenixFilament.Resource.Renderer.render(assigns)
+      end
+
+      defoverridable mount: 3,
+                     handle_params: 3,
+                     handle_event: 3,
+                     handle_info: 2,
+                     render: 1
+    end
+  end
+
+  defmacro __before_compile__(_env) do
+    quote do
+      def __resource__(:schema), do: @_phx_filament_schema
+      def __resource__(:repo), do: @_phx_filament_repo
+      def __resource__(:opts), do: @_phx_filament_opts
+
+      def __resource__(:form_schema) do
+        case @_phx_filament_form_schema do
+          nil -> PhoenixFilament.Resource.Defaults.form_fields(@_phx_filament_schema)
+          schema -> schema
+        end
+      end
+
+      def __resource__(:form_fields) do
+        case @_phx_filament_form_schema do
+          nil ->
+            case @_phx_filament_form_fields |> Enum.reverse() do
+              [] -> PhoenixFilament.Resource.Defaults.form_fields(@_phx_filament_schema)
+              fields -> fields
+            end
+
+          schema ->
+            PhoenixFilament.Form.Schema.extract_fields(schema)
+        end
+      end
+
+      def __resource__(:table_columns) do
+        case @_phx_filament_table_columns |> Enum.reverse() do
+          [] -> PhoenixFilament.Resource.Defaults.table_columns(@_phx_filament_schema)
+          columns -> columns
+        end
+      end
+
+      def __resource__(:table_actions) do
+        @_phx_filament_table_actions |> Enum.reverse()
+      end
+
+      def __resource__(:table_filters) do
+        @_phx_filament_table_filters |> Enum.reverse()
+      end
+
+      def __resource__(key) do
+        raise ArgumentError,
+              "unknown resource key #{inspect(key)}. " <>
+                "Valid keys are: #{inspect(unquote(Macro.escape(@valid_resource_keys)))}"
       end
     end
   end

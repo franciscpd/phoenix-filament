@@ -191,6 +191,51 @@ defmodule PhoenixFilament.Resource.LifecycleTest do
     end
   end
 
+  describe "apply_action/3 :edit" do
+    test "sets page title, loads record, and builds form" do
+      socket =
+        base_socket()
+        |> Lifecycle.init_assigns(MockResource)
+        |> Lifecycle.apply_action(:edit, %{"id" => 1})
+
+      assert socket.assigns.page_title == "Edit Blog Post"
+      assert socket.assigns.record != nil
+      assert socket.assigns.record.id == 1
+      assert %Phoenix.HTML.Form{} = socket.assigns.form
+    end
+
+    test "sets changeset_fn for update" do
+      socket =
+        base_socket()
+        |> Lifecycle.init_assigns(MockResource)
+        |> Lifecycle.apply_action(:edit, %{"id" => 1})
+
+      assert is_function(socket.assigns.changeset_fn, 2)
+    end
+  end
+
+  describe "apply_action/3 :show" do
+    test "sets page title and loads record" do
+      socket =
+        base_socket()
+        |> Lifecycle.init_assigns(MockResource)
+        |> Lifecycle.apply_action(:show, %{"id" => 1})
+
+      assert socket.assigns.page_title == "Blog Post"
+      assert socket.assigns.record != nil
+      assert socket.assigns.record.id == 1
+    end
+
+    test "does not set form" do
+      socket =
+        base_socket()
+        |> Lifecycle.init_assigns(MockResource)
+        |> Lifecycle.apply_action(:show, %{"id" => 1})
+
+      assert socket.assigns.form == nil
+    end
+  end
+
   describe "changeset resolution" do
     test "uses default schema.changeset/2 when none configured" do
       socket =
