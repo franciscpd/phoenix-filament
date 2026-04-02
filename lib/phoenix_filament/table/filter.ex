@@ -1,6 +1,9 @@
 defmodule PhoenixFilament.Table.Filter do
   @moduledoc """
   Represents a table filter declaration. Types: :select, :boolean, :date_range.
+
+  The `composition` field (`:and` | `:or`) is reserved for future use.
+  Currently all filters are composed with AND logic.
   """
 
   @type t :: %__MODULE__{

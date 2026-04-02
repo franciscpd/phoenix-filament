@@ -34,16 +34,16 @@ defmodule PhoenixFilament.Table.TableRenderer do
   def search_bar(assigns) do
     ~H"""
     <div class="form-control w-full max-w-xs">
-      <input
-        type="text"
-        name="search"
-        value={@search}
-        placeholder={@placeholder}
-        class="input input-bordered input-sm w-full"
-        phx-change="search"
-        phx-debounce="300"
-        phx-target={@target}
-      />
+      <form phx-change="search" phx-submit="search" phx-target={@target}>
+        <input
+          type="search"
+          name="search"
+          value={@search}
+          placeholder={@placeholder}
+          class="input input-bordered input-sm w-full"
+          phx-debounce="300"
+        />
+      </form>
     </div>
     """
   end
@@ -241,6 +241,7 @@ defmodule PhoenixFilament.Table.TableRenderer do
   attr(:page, :integer, required: true)
   attr(:per_page, :integer, required: true)
   attr(:total, :integer, required: true)
+  attr(:page_sizes, :list, default: [10, 25, 50, 100])
   attr(:target, :any, default: nil)
 
   def pagination(assigns) do
@@ -285,15 +286,14 @@ defmodule PhoenixFilament.Table.TableRenderer do
       </div>
 
       <div class="flex items-center gap-2 text-sm">
-        <label for="per_page_select">Per page:</label>
+        <label>Per page:</label>
         <select
-          id="per_page_select"
           name="per_page"
           class="select select-sm select-bordered"
           phx-change="per_page"
           phx-target={@target}
         >
-          <%= for opt <- [10, 25, 50, 100] do %>
+          <%= for opt <- @page_sizes do %>
             <option value={opt} selected={opt == @per_page}>{opt}</option>
           <% end %>
         </select>
@@ -361,7 +361,8 @@ defmodule PhoenixFilament.Table.TableRenderer do
   end
 
   defp badge_text(value) do
-    {:safe, escaped} = Phoenix.HTML.html_escape(to_string(value || ""))
+    text = to_string(value || "")
+    escaped = text |> Phoenix.HTML.html_escape() |> Phoenix.HTML.safe_to_string()
     Phoenix.HTML.raw(~s(<span class="badge badge-sm">#{escaped}</span>))
   end
 
@@ -474,14 +475,14 @@ defmodule PhoenixFilament.Table.TableRenderer do
       <div class="flex gap-2">
         <input
           type="date"
-          name={"filter[#{@field_name}_from]"}
+          name={"filter[#{@field_name}][from]"}
           class="input input-sm input-bordered"
           phx-change="filter"
           phx-target={@target}
         />
         <input
           type="date"
-          name={"filter[#{@field_name}_to]"}
+          name={"filter[#{@field_name}][to]"}
           class="input input-sm input-bordered"
           phx-change="filter"
           phx-target={@target}

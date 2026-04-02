@@ -66,8 +66,17 @@ defmodule PhoenixFilament.Table.Params do
   end
 
   defp atomize_keys(map) when is_map(map) do
-    Map.new(map, fn {k, v} ->
-      {safe_to_atom(k, String.to_atom(k)), v}
-    end)
+    Map.new(
+      for {k, v} <- map,
+          atom_key = safe_to_existing_atom(k),
+          atom_key != nil,
+          do: {atom_key, v}
+    )
+  end
+
+  defp safe_to_existing_atom(str) do
+    String.to_existing_atom(str)
+  rescue
+    ArgumentError -> nil
   end
 end

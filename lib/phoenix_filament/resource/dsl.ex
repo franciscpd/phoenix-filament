@@ -206,6 +206,7 @@ end
 defmodule PhoenixFilament.Resource.DSL.TableActions do
   @moduledoc false
 
+  @doc false
   defmacro action(type, opts \\ []) do
     quote do
       @_phx_filament_table_actions %PhoenixFilament.Table.Action{
@@ -221,6 +222,7 @@ end
 defmodule PhoenixFilament.Resource.DSL.TableFilters do
   @moduledoc false
 
+  @doc false
   defmacro select_filter(field, opts \\ []) do
     quote do
       @_phx_filament_table_filters %PhoenixFilament.Table.Filter{
@@ -232,12 +234,12 @@ defmodule PhoenixFilament.Resource.DSL.TableFilters do
             :label,
             PhoenixFilament.Naming.humanize(unquote(field))
           ),
-        options: Keyword.get(unquote(opts), :options, []),
-        composition: Keyword.get(unquote(opts), :composition, :and)
+        options: Keyword.get(unquote(opts), :options, [])
       }
     end
   end
 
+  @doc false
   defmacro boolean_filter(field, opts \\ []) do
     quote do
       @_phx_filament_table_filters %PhoenixFilament.Table.Filter{
@@ -248,12 +250,12 @@ defmodule PhoenixFilament.Resource.DSL.TableFilters do
             unquote(opts),
             :label,
             PhoenixFilament.Naming.humanize(unquote(field))
-          ),
-        composition: Keyword.get(unquote(opts), :composition, :and)
+          )
       }
     end
   end
 
+  @doc false
   defmacro date_filter(field, opts \\ []) do
     quote do
       @_phx_filament_table_filters %PhoenixFilament.Table.Filter{
@@ -264,8 +266,7 @@ defmodule PhoenixFilament.Resource.DSL.TableFilters do
             unquote(opts),
             :label,
             PhoenixFilament.Naming.humanize(unquote(field))
-          ),
-        composition: Keyword.get(unquote(opts), :composition, :and)
+          )
       }
     end
   end

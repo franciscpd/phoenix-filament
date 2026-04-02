@@ -210,6 +210,7 @@ defmodule PhoenixFilament.Table.TableLive do
         page={@meta.page}
         per_page={@meta.per_page}
         total={@meta.total}
+        page_sizes={@page_sizes}
         target={@myself}
       />
 
