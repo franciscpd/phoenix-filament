@@ -81,7 +81,7 @@ Requirements for v0.1.0 release. Each maps to roadmap phases.
 
 ### Plugin Architecture
 
-- [ ] **PLUG-01**: Plugin behaviour with `register/1` and `boot/1` callbacks
+- [ ] **PLUG-01**: Plugin behaviour with `register/2` and `boot/1` callbacks
 - [ ] **PLUG-02**: Plugin registration system per panel (each panel declares its plugins)
 - [ ] **PLUG-03**: Plugins resolved at runtime (on_mount), not compile-time — avoids recompilation cascades
 - [ ] **PLUG-04**: Built-in Resource system registered as a plugin (internals-as-plugins pattern)
