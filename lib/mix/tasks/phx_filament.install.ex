@@ -81,7 +81,7 @@ defmodule Mix.Tasks.PhxFilament.Install do
           """
         end
 
-      Igniter.create_new_file(igniter, path, contents)
+      Igniter.create_new_file(igniter, path, contents, on_exists: :skip)
     end
 
     defp copy_chart_js(igniter) do
@@ -90,7 +90,7 @@ defmodule Mix.Tasks.PhxFilament.Install do
 
       if File.exists?(source) do
         contents = File.read!(source)
-        Igniter.create_new_file(igniter, dest, contents)
+        Igniter.create_new_file(igniter, dest, contents, on_exists: :skip)
       else
         igniter
       end
@@ -130,7 +130,7 @@ defmodule Mix.Tasks.PhxFilament.Install do
       export default PhxFilamentHooks
       """
 
-      Igniter.create_new_file(igniter, "assets/js/phx_filament_hooks.js", hook_code)
+      Igniter.create_new_file(igniter, "assets/js/phx_filament_hooks.js", hook_code, on_exists: :skip)
     end
 
     defp patch_router(igniter, panel_module) do

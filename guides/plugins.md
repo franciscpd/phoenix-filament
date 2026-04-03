@@ -266,7 +266,7 @@ end
 
 ## Testing Your Plugin
 
-Use ExUnit with the `PhoenixFilament.ComponentCase` helper:
+Use ExUnit with `use ExUnit.Case`:
 
 ```elixir
 defmodule MyApp.AuditLogPluginTest do

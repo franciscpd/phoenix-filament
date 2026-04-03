@@ -126,9 +126,9 @@ defmodule MyAppWeb.Admin.PostResource do
 end
 ```
 
-### Register the resource in your Panel
+### Resource registration in your Panel
 
-Open `lib/my_app_web/admin.ex` and add the resource:
+`mix phx_filament.gen.resource` automatically registers the resource in your Panel module. You should see a `resources do...end` block added to `lib/my_app_web/admin.ex`:
 
 ```elixir
 defmodule MyAppWeb.Admin do
@@ -143,6 +143,8 @@ defmodule MyAppWeb.Admin do
   end
 end
 ```
+
+If auto-registration fails (e.g. the Panel module cannot be found), the task prints instructions for manual registration — simply add the `resources do...end` block above yourself.
 
 ## Visit /admin
 

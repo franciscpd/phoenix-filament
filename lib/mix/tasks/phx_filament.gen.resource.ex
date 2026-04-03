@@ -82,7 +82,7 @@ defmodule Mix.Tasks.PhxFilament.Gen.Resource do
           """
         end
 
-      Igniter.create_new_file(igniter, path, contents)
+      Igniter.create_new_file(igniter, path, contents, on_exists: :skip)
     end
 
     defp register_resource_in_panel(igniter, panel_module, resource_module) do
