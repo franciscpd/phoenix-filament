@@ -26,10 +26,13 @@ defmodule PhoenixFilament.Widget.Chart do
         chart_type = __MODULE__.chart_type()
         chart_opts = __MODULE__.chart_options()
 
-        if @polling_interval && !socket.assigns[:_polling_started] do
-          Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
-          socket = Phoenix.Component.assign(socket, :_polling_started, true)
-        end
+        socket =
+          if @polling_interval && !socket.assigns[:_polling_started] do
+            Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
+            Phoenix.Component.assign(socket, :_polling_started, true)
+          else
+            socket
+          end
 
         chart_config = %{type: chart_type, data: data, options: chart_opts}
         socket = Phoenix.Component.assign(socket, :chart_config, Jason.encode!(chart_config))

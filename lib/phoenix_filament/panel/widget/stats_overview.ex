@@ -34,10 +34,13 @@ defmodule PhoenixFilament.Widget.StatsOverview do
         stats = __MODULE__.stats(socket.assigns)
         socket = Phoenix.Component.assign(socket, :stats, stats)
 
-        if @polling_interval && !socket.assigns[:_polling_started] do
-          Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
-          socket = Phoenix.Component.assign(socket, :_polling_started, true)
-        end
+        socket =
+          if @polling_interval && !socket.assigns[:_polling_started] do
+            Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
+            Phoenix.Component.assign(socket, :_polling_started, true)
+          else
+            socket
+          end
 
         {:ok, socket}
       end

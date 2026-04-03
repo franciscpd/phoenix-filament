@@ -37,10 +37,13 @@ defmodule PhoenixFilament.Widget.Table do
         socket = Phoenix.Component.assign(socket, :widget_heading, __MODULE__.heading())
         socket = Phoenix.Component.assign(socket, :widget_columns, __MODULE__.columns())
 
-        if @polling_interval && !socket.assigns[:_polling_started] do
-          Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
-          socket = Phoenix.Component.assign(socket, :_polling_started, true)
-        end
+        socket =
+          if @polling_interval && !socket.assigns[:_polling_started] do
+            Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
+            Phoenix.Component.assign(socket, :_polling_started, true)
+          else
+            socket
+          end
 
         {:ok, socket}
       end

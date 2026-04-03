@@ -22,6 +22,23 @@ defmodule PhoenixFilament.Panel do
         end
       end
 
+  ## Slug and label derivation
+
+  When no explicit `slug:` option is given to a `resource` declaration, the panel
+  auto-derives the slug by appending `"s"` to the underscored schema name
+  (e.g. `Post` → `"posts"`, `Category` → `"categorys"`).
+
+  **Limitation:** this is naive English pluralization — it does NOT handle irregular
+  plurals (e.g. `Person` → `"persons"` instead of `"people"`, `Category` →
+  `"categorys"` instead of `"categories"`). For any irregular or compound schema
+  name, pass an explicit `slug:` option:
+
+      resource MyApp.Admin.PersonResource, slug: "people"
+      resource MyApp.Admin.CategoryResource, slug: "categories"
+
+  The same naive pluralization is applied to `plural_label` when no explicit
+  `plural_label:` is set in the resource's options.
+
   ## Options
 
   #{NimbleOptions.docs(PhoenixFilament.Panel.Options.panel_schema())}
@@ -77,6 +94,7 @@ defmodule PhoenixFilament.Panel do
             module: mod,
             icon: opts[:icon],
             nav_group: opts[:nav_group],
+            # Naive pluralization: appends "s". Use explicit slug: for irregular plurals.
             slug:
               opts[:slug] || schema_name |> Macro.underscore() |> Kernel.<>("s"),
             label:
@@ -123,8 +141,11 @@ defmodule PhoenixFilament.Panel do
 
   @doc """
   Broadcasts session revocation for a user, disconnecting all their active panel sessions.
+
+  Requires a non-nil `user_id`. Calling with `nil` would broadcast to
+  `"user_sessions:"` and affect all sessions without a user — the guard prevents that.
   """
-  def revoke_sessions(pubsub, user_id) do
+  def revoke_sessions(pubsub, user_id) when not is_nil(user_id) do
     Phoenix.PubSub.broadcast(pubsub, "user_sessions:#{user_id}", :session_revoked)
   end
 end

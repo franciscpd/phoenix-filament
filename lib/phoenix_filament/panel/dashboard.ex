@@ -13,17 +13,9 @@ defmodule PhoenixFilament.Panel.Dashboard do
         []
       end
 
-    custom_dashboard =
-      if panel_module do
-        panel_module.__panel__(:opts)[:dashboard]
-      else
-        nil
-      end
-
     socket =
       socket
       |> assign(:widgets, widgets)
-      |> assign(:custom_dashboard, custom_dashboard)
       |> assign(:page_title, "Dashboard")
 
     {:ok, socket}

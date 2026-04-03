@@ -9,9 +9,17 @@ defmodule PhoenixFilament.Panel.Navigation do
 
     groups =
       grouped
-      |> Enum.chunk_by(& &1.nav_group)
-      |> Enum.map(fn items ->
-        %{label: hd(items).nav_group, items: items}
+      |> Enum.reduce({[], %{}}, fn item, {order, groups} ->
+        group_name = item.nav_group
+
+        if Map.has_key?(groups, group_name) do
+          {order, Map.update!(groups, group_name, &(&1 ++ [item]))}
+        else
+          {order ++ [group_name], Map.put(groups, group_name, [item])}
+        end
+      end)
+      |> then(fn {order, groups} ->
+        Enum.map(order, fn name -> %{label: name, items: groups[name]} end)
       end)
 
     %{groups: groups, ungrouped: ungrouped}

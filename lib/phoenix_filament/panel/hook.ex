@@ -71,9 +71,28 @@ defmodule PhoenixFilament.Panel.Hook do
         base
 
       resource ->
-        base ++ [%{label: resource.plural_label, path: "#{panel_path}/#{resource.slug}"}]
+        resource_path = "#{panel_path}/#{resource.slug}"
+        resource_crumb = %{label: resource.plural_label, path: resource_path}
+
+        # Parse action from remaining path after resource slug
+        remaining = String.replace_prefix(current_path, resource_path, "")
+        action_crumb = action_breadcrumb(remaining)
+
+        base ++ [resource_crumb | action_crumb]
     end
   end
+
+  defp action_breadcrumb("/new"), do: [%{label: "New", path: nil}]
+
+  defp action_breadcrumb("/" <> rest) do
+    case String.split(rest, "/", parts: 2) do
+      [_id, "edit"] -> [%{label: "Edit", path: nil}]
+      [_id] -> [%{label: "Show", path: nil}]
+      _ -> []
+    end
+  end
+
+  defp action_breadcrumb(_), do: []
 
   defp maybe_subscribe_pubsub(socket, opts) do
     pubsub = opts[:pubsub]
