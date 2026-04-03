@@ -38,7 +38,7 @@ defmodule PhoenixFilament.Panel.Router do
   defmacro phoenix_filament_panel(path, panel_module) do
     quote bind_quoted: [path: path, panel_module: panel_module] do
       opts = panel_module.__panel__(:opts)
-      resources = panel_module.__panel__(:resources)
+      all_routes = panel_module.__panel__(:all_routes)
       session_name = :"phoenix_filament_#{:erlang.phash2(panel_module)}"
 
       on_mount_hooks =
@@ -55,14 +55,8 @@ defmodule PhoenixFilament.Panel.Router do
           layout: {PhoenixFilament.Panel.Layout, :panel} do
           live "/", dashboard_module, :index
 
-          for resource <- resources do
-            slug = resource.slug
-            mod = resource.module
-
-            live "/#{slug}", mod, :index
-            live "/#{slug}/new", mod, :new
-            live "/#{slug}/:id", mod, :show
-            live "/#{slug}/:id/edit", mod, :edit
+          for route <- all_routes do
+            live route.path, route.live_view, route.live_action
           end
         end
       end
