@@ -4,14 +4,28 @@ defmodule PhoenixFilament.Panel.NavigationTest do
   alias PhoenixFilament.Panel.Navigation
 
   @nav_items [
-    %{label: "Posts", path: "/admin/posts", icon: "hero-document-text",
-      icon_fallback: "P", nav_group: "Content"},
-    %{label: "Categories", path: "/admin/categories", icon: "hero-tag",
-      icon_fallback: "C", nav_group: "Content"},
-    %{label: "Users", path: "/admin/users", icon: "hero-users",
-      icon_fallback: "U", nav_group: "Management"},
-    %{label: "Settings", path: "/admin/settings", icon: nil,
-      icon_fallback: "S", nav_group: nil}
+    %{
+      label: "Posts",
+      path: "/admin/posts",
+      icon: "hero-document-text",
+      icon_fallback: "P",
+      nav_group: "Content"
+    },
+    %{
+      label: "Categories",
+      path: "/admin/categories",
+      icon: "hero-tag",
+      icon_fallback: "C",
+      nav_group: "Content"
+    },
+    %{
+      label: "Users",
+      path: "/admin/users",
+      icon: "hero-users",
+      icon_fallback: "U",
+      nav_group: "Management"
+    },
+    %{label: "Settings", path: "/admin/settings", icon: nil, icon_fallback: "S", nav_group: nil}
   ]
 
   describe "build_tree/2" do
@@ -59,6 +73,7 @@ defmodule PhoenixFilament.Panel.NavigationTest do
         %{label: "B", path: "/b", icon: nil, icon_fallback: "B", nav_group: "Admin"},
         %{label: "C", path: "/c", icon: nil, icon_fallback: "C", nav_group: "Blog"}
       ]
+
       tree = Navigation.build_tree(items, "/")
       assert length(tree.groups) == 2
       [blog | _] = tree.groups

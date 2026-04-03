@@ -46,7 +46,7 @@ defmodule PhoenixFilament.Panel.DSL do
           unless function_exported?(mod, :register, 2) do
             raise ArgumentError,
                   "#{inspect(mod)} does not implement PhoenixFilament.Plugin behaviour " <>
-                  "(missing register/2). Did you forget `use PhoenixFilament.Plugin`?"
+                    "(missing register/2). Did you forget `use PhoenixFilament.Plugin`?"
           end
 
         {:error, _} ->

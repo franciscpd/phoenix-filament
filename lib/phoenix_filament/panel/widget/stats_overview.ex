@@ -85,7 +85,7 @@ defmodule PhoenixFilament.Widget.StatsOverview do
     """
   end
 
-  attr :data, :list, required: true
+  attr(:data, :list, required: true)
 
   def sparkline(assigns) do
     ~H"""

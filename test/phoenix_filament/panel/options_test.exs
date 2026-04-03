@@ -23,8 +23,14 @@ defmodule PhoenixFilament.Panel.OptionsTest do
     end
 
     test "validates plug as module or {module, term} tuple" do
-      assert {:ok, _} = NimbleOptions.validate([path: "/admin", plug: MyPlug], Options.panel_schema())
-      assert {:ok, _} = NimbleOptions.validate([path: "/admin", plug: {MyPlug, []}], Options.panel_schema())
+      assert {:ok, _} =
+               NimbleOptions.validate([path: "/admin", plug: MyPlug], Options.panel_schema())
+
+      assert {:ok, _} =
+               NimbleOptions.validate(
+                 [path: "/admin", plug: {MyPlug, []}],
+                 Options.panel_schema()
+               )
     end
 
     test "defaults brand_name to Admin" do

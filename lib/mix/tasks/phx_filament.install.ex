@@ -130,7 +130,9 @@ defmodule Mix.Tasks.PhxFilament.Install do
       export default PhxFilamentHooks
       """
 
-      Igniter.create_new_file(igniter, "assets/js/phx_filament_hooks.js", hook_code, on_exists: :skip)
+      Igniter.create_new_file(igniter, "assets/js/phx_filament_hooks.js", hook_code,
+        on_exists: :skip
+      )
     end
 
     defp patch_router(igniter, panel_module) do
@@ -222,6 +224,7 @@ defmodule Mix.Tasks.PhxFilament.Install do
     defp patch_app_js(igniter) do
       app_js_path = "assets/js/app.js"
       import_line = ~s|import PhxFilamentHooks from "./phx_filament_hooks"|
+
       hooks_merge_comment = """
       // Merge PhxFilamentHooks into your liveSocket hooks option, e.g.:
       //   let liveSocket = new LiveSocket("/live", Socket, {hooks: {...Hooks, ...PhxFilamentHooks}})

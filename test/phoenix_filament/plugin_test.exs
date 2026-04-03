@@ -5,7 +5,13 @@ defmodule PhoenixFilament.PluginTest do
 
   describe "nav_item/2" do
     test "builds nav item map with all fields" do
-      item = Plugin.nav_item("Analytics", path: "/analytics", icon: "hero-chart-bar", nav_group: "Reports")
+      item =
+        Plugin.nav_item("Analytics",
+          path: "/analytics",
+          icon: "hero-chart-bar",
+          nav_group: "Reports"
+        )
+
       assert item.label == "Analytics"
       assert item.path == "/analytics"
       assert item.icon == "hero-chart-bar"

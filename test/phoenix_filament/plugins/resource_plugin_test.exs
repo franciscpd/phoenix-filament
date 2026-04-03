@@ -4,10 +4,22 @@ defmodule PhoenixFilament.Plugins.ResourcePluginTest do
   alias PhoenixFilament.Plugins.ResourcePlugin
 
   @resources [
-    %{module: PostResource, icon: "hero-document-text", nav_group: "Content",
-      slug: "posts", label: "Post", plural_label: "Posts"},
-    %{module: UserResource, icon: "hero-users", nav_group: nil,
-      slug: "users", label: "User", plural_label: "Users"}
+    %{
+      module: PostResource,
+      icon: "hero-document-text",
+      nav_group: "Content",
+      slug: "posts",
+      label: "Post",
+      plural_label: "Posts"
+    },
+    %{
+      module: UserResource,
+      icon: "hero-users",
+      nav_group: nil,
+      slug: "users",
+      label: "User",
+      plural_label: "Users"
+    }
   ]
 
   defmodule FakePanel do

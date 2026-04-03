@@ -30,6 +30,7 @@ defmodule PhoenixFilament.Plugin.ResolverTest do
         hooks: [{:handle_info, &__MODULE__.on_info/2}]
       }
     end
+
     def on_info(_msg, socket), do: {:cont, socket}
   end
 

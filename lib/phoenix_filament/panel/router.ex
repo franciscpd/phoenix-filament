@@ -53,10 +53,10 @@ defmodule PhoenixFilament.Panel.Router do
         live_session session_name,
           on_mount: on_mount_hooks,
           layout: {PhoenixFilament.Panel.Layout, :panel} do
-          live "/", dashboard_module, :index
+          live("/", dashboard_module, :index)
 
           for route <- all_routes do
-            live route.path, route.live_view, route.live_action
+            live(route.path, route.live_view, route.live_action)
           end
         end
       end

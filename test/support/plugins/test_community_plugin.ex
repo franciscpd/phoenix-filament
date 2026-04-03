@@ -8,7 +8,8 @@ defmodule PhoenixFilament.Test.Plugins.TestCommunityPlugin do
         nav_item("Analytics",
           path: "/analytics",
           icon: "hero-chart-bar",
-          nav_group: opts[:nav_group] || "Reports")
+          nav_group: opts[:nav_group] || "Reports"
+        )
       ],
       routes: [
         route("/analytics", PhoenixFilament.Test.Plugins.TestCommunityPlugin, :index)

@@ -14,8 +14,8 @@ defmodule PhoenixFilament.Components.Icon do
   """
   use Phoenix.Component
 
-  attr :name, :string, required: true
-  attr :class, :string, default: "h-5 w-5"
+  attr(:name, :string, required: true)
+  attr(:class, :string, default: "h-5 w-5")
 
   def icon(assigns) do
     ~H"""

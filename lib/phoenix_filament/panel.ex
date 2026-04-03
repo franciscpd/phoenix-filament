@@ -59,9 +59,9 @@ defmodule PhoenixFilament.Panel do
       @behaviour PhoenixFilament.Panel
 
       @_phx_filament_panel_opts NimbleOptions.validate!(
-                                   unquote(opts),
-                                   PhoenixFilament.Panel.Options.panel_schema()
-                                 )
+                                  unquote(opts),
+                                  PhoenixFilament.Panel.Options.panel_schema()
+                                )
 
       if is_nil(@_phx_filament_panel_opts[:on_mount]) do
         IO.warn(
@@ -82,55 +82,60 @@ defmodule PhoenixFilament.Panel do
   defmacro __before_compile__(_env) do
     quote do
       # Pre-compute enriched resources to avoid calling __MODULE__.__panel__/1 at compile time
-      @_phx_filament_enriched_resources (
-        @_phx_filament_panel_resources
-        |> Enum.reverse()
-        |> Enum.map(fn {mod, opts} ->
-          resource_opts = mod.__resource__(:opts)
-          schema = mod.__resource__(:schema)
-          schema_name = schema |> Module.split() |> List.last()
+      @_phx_filament_enriched_resources @_phx_filament_panel_resources
+                                        |> Enum.reverse()
+                                        |> Enum.map(fn {mod, opts} ->
+                                          resource_opts = mod.__resource__(:opts)
+                                          schema = mod.__resource__(:schema)
+                                          schema_name = schema |> Module.split() |> List.last()
 
-          %{
-            module: mod,
-            icon: opts[:icon],
-            nav_group: opts[:nav_group],
-            # Naive pluralization: appends "s". Use explicit slug: for irregular plurals.
-            slug:
-              opts[:slug] || schema_name |> Macro.underscore() |> Kernel.<>("s"),
-            label:
-              resource_opts[:label] ||
-                PhoenixFilament.Naming.humanize(
-                  schema_name |> Macro.underscore() |> String.to_atom()
-                ),
-            plural_label:
-              resource_opts[:plural_label] ||
-                schema_name
-                |> Macro.underscore()
-                |> Kernel.<>("s")
-                |> String.replace("_", " ")
-                |> String.capitalize()
-          }
-        end)
-      )
+                                          %{
+                                            module: mod,
+                                            icon: opts[:icon],
+                                            nav_group: opts[:nav_group],
+                                            # Naive pluralization: appends "s". Use explicit slug: for irregular plurals.
+                                            slug:
+                                              opts[:slug] ||
+                                                schema_name
+                                                |> Macro.underscore()
+                                                |> Kernel.<>("s"),
+                                            label:
+                                              resource_opts[:label] ||
+                                                PhoenixFilament.Naming.humanize(
+                                                  schema_name
+                                                  |> Macro.underscore()
+                                                  |> String.to_atom()
+                                                ),
+                                            plural_label:
+                                              resource_opts[:plural_label] ||
+                                                schema_name
+                                                |> Macro.underscore()
+                                                |> Kernel.<>("s")
+                                                |> String.replace("_", " ")
+                                                |> String.capitalize()
+                                          }
+                                        end)
 
       # Pre-compute enriched widgets to avoid calling __MODULE__.__panel__/1 at compile time
-      @_phx_filament_enriched_widgets (
-        @_phx_filament_panel_widgets
-        |> Enum.reverse()
-        |> Enum.map(fn {mod, opts} ->
-          %{
-            module: mod,
-            sort: opts[:sort] || 0,
-            column_span:
-              case opts[:column_span] do
-                :full -> 12
-                n -> n || 12
-              end,
-            id: mod |> Module.split() |> List.last() |> Macro.underscore()
-          }
-        end)
-        |> Enum.sort_by(& &1.sort)
-      )
+      @_phx_filament_enriched_widgets @_phx_filament_panel_widgets
+                                      |> Enum.reverse()
+                                      |> Enum.map(fn {mod, opts} ->
+                                        %{
+                                          module: mod,
+                                          sort: opts[:sort] || 0,
+                                          column_span:
+                                            case opts[:column_span] do
+                                              :full -> 12
+                                              n -> n || 12
+                                            end,
+                                          id:
+                                            mod
+                                            |> Module.split()
+                                            |> List.last()
+                                            |> Macro.underscore()
+                                        }
+                                      end)
+                                      |> Enum.sort_by(& &1.sort)
 
       @impl PhoenixFilament.Panel
       def __panel__(:opts), do: @_phx_filament_panel_opts
@@ -145,22 +150,26 @@ defmodule PhoenixFilament.Panel do
       def __panel__(:widgets), do: @_phx_filament_enriched_widgets
 
       # Build full plugin list: built-in first, then community
-      @_phx_filament_all_plugins (
-        (if @_phx_filament_enriched_resources != [] do
-           [{PhoenixFilament.Plugins.ResourcePlugin,
-             [resources: @_phx_filament_enriched_resources,
-              panel_path: @_phx_filament_panel_opts[:path]]}]
-         else
-           []
-         end) ++
-          (if @_phx_filament_enriched_widgets != [] do
-             [{PhoenixFilament.Plugins.WidgetPlugin,
-               [widgets: @_phx_filament_enriched_widgets]}]
-           else
-             []
-           end) ++
-          (@_phx_filament_panel_plugins |> Enum.reverse())
-      )
+      @_phx_filament_all_plugins (if @_phx_filament_enriched_resources != [] do
+                                    [
+                                      {PhoenixFilament.Plugins.ResourcePlugin,
+                                       [
+                                         resources: @_phx_filament_enriched_resources,
+                                         panel_path: @_phx_filament_panel_opts[:path]
+                                       ]}
+                                    ]
+                                  else
+                                    []
+                                  end) ++
+                                   (if @_phx_filament_enriched_widgets != [] do
+                                      [
+                                        {PhoenixFilament.Plugins.WidgetPlugin,
+                                         [widgets: @_phx_filament_enriched_widgets]}
+                                      ]
+                                    else
+                                      []
+                                    end) ++
+                                   (@_phx_filament_panel_plugins |> Enum.reverse())
 
       @_phx_filament_resolved PhoenixFilament.Plugin.Resolver.resolve(
                                 @_phx_filament_all_plugins,

@@ -114,8 +114,7 @@ defmodule Mix.Tasks.PhxFilament.Gen.Resource do
                      {:ok, Igniter.Code.Common.add_code(do_zipper, resources_block)}
 
                    :error ->
-                     {:warning,
-                      registration_manual_notice(panel_module, resource_module)}
+                     {:warning, registration_manual_notice(panel_module, resource_module)}
                  end
              end
            end) do

@@ -11,7 +11,11 @@ defmodule PhoenixFilament.Panel.Options do
                     type: {:or, [:atom, {:tuple, [:atom, :any]}]},
                     doc: "Plug module or {module, opts} for HTTP auth"
                   ],
-                  brand_name: [type: :string, default: "Admin", doc: "Display name in sidebar header"],
+                  brand_name: [
+                    type: :string,
+                    default: "Admin",
+                    doc: "Display name in sidebar header"
+                  ],
                   logo: [type: :string, doc: "Logo URL for sidebar header"],
                   theme: [type: :string, doc: "daisyUI theme name"],
                   theme_switcher: [type: :boolean, default: false, doc: "Show light/dark toggle"],

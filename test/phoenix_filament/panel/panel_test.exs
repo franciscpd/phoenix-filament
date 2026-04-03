@@ -109,7 +109,10 @@ defmodule PhoenixFilament.PanelTest do
       plugins = TestPanel.__panel__(:plugins)
       modules = Enum.map(plugins, &elem(&1, 0))
       resource_idx = Enum.find_index(modules, &(&1 == PhoenixFilament.Plugins.ResourcePlugin))
-      community_idx = Enum.find_index(modules, &(&1 == PhoenixFilament.Test.Plugins.TestCommunityPlugin))
+
+      community_idx =
+        Enum.find_index(modules, &(&1 == PhoenixFilament.Test.Plugins.TestCommunityPlugin))
+
       assert resource_idx < community_idx
     end
   end

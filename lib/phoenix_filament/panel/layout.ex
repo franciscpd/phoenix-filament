@@ -34,11 +34,11 @@ defmodule PhoenixFilament.Panel.Layout do
   end
 
   # sidebar/1 — declare attrs
-  attr :nav, :map, required: true
-  attr :brand, :string, required: true
-  attr :logo, :string, default: nil
-  attr :path, :string, required: true
-  attr :theme_switcher, :boolean, default: false
+  attr(:nav, :map, required: true)
+  attr(:brand, :string, required: true)
+  attr(:logo, :string, default: nil)
+  attr(:path, :string, required: true)
+  attr(:theme_switcher, :boolean, default: false)
 
   def sidebar(assigns) do
     ~H"""
@@ -126,7 +126,7 @@ defmodule PhoenixFilament.Panel.Layout do
   end
 
   # topbar/1
-  attr :brand, :string, default: "Admin"
+  attr(:brand, :string, default: "Admin")
 
   def topbar(assigns) do
     ~H"""
@@ -157,7 +157,7 @@ defmodule PhoenixFilament.Panel.Layout do
   end
 
   # breadcrumbs/1
-  attr :items, :list, required: true
+  attr(:items, :list, required: true)
 
   def breadcrumbs(assigns) do
     assigns =
@@ -178,7 +178,7 @@ defmodule PhoenixFilament.Panel.Layout do
   end
 
   # flash_group/1
-  attr :flash, :map, required: true
+  attr(:flash, :map, required: true)
 
   def flash_group(assigns) do
     ~H"""
