@@ -11,27 +11,26 @@ defmodule Mix.Tasks.PhxFilament.Install do
   1. Creates an admin Panel module at `lib/{app_web}/admin.ex`
   2. Copies Chart.js vendor asset to `assets/vendor/chart.min.js`
   3. Creates `assets/js/phx_filament_hooks.js` with Chart.js LiveView hook
+  4. Patches `router.ex` to import `PhoenixFilament.Panel.Router` and mount the panel
+  5. Patches `assets/js/app.js` to import `phx_filament_hooks.js`
 
   Running this task multiple times is safe — it is idempotent.
 
-  ## Manual steps after install
+  ## Router patching
 
-  Add the following to your `router.ex`:
+  The installer attempts to automatically patch `router.ex`. If it cannot find
+  the router or the browser scope, it will print clear instructions for manual steps.
 
-      import PhoenixFilament.Router
+  ## JS patching
 
-      # Inside your browser pipeline scope:
-      mount_panel MyAppWeb.Admin
-
-  Add the following to your `assets/js/app.js`:
-
-      import PhxFilamentHooks from "./phx_filament_hooks"
-      // Merge into your liveSocket hooks:
-      // hooks: {...Hooks, ...PhxFilamentHooks}
+  The installer attempts to automatically patch `assets/js/app.js`. If it cannot
+  find the file, it will print clear instructions for manual steps.
   """
 
   if Code.ensure_loaded?(Igniter) do
     use Igniter.Mix.Task
+
+    @shortdoc "Installs PhoenixFilament admin panel"
 
     @impl Igniter.Mix.Task
     def info(_argv, _composing_task) do
@@ -53,6 +52,8 @@ defmodule Mix.Tasks.PhxFilament.Install do
       |> create_panel_module(panel_module, brand_name)
       |> copy_chart_js()
       |> create_chart_hook_file()
+      |> patch_router(panel_module)
+      |> patch_app_js()
     end
 
     defp create_panel_module(igniter, panel_module, brand_name) do
@@ -130,6 +131,127 @@ defmodule Mix.Tasks.PhxFilament.Install do
       """
 
       Igniter.create_new_file(igniter, "assets/js/phx_filament_hooks.js", hook_code)
+    end
+
+    defp patch_router(igniter, panel_module) do
+      {igniter, routers} = Igniter.Libs.Phoenix.list_routers(igniter)
+
+      case routers do
+        [] ->
+          Igniter.add_notice(igniter, router_manual_notice(panel_module))
+
+        [router | _] ->
+          igniter
+          |> add_router_import(router, panel_module)
+          |> add_router_mount(router, panel_module)
+      end
+    end
+
+    defp add_router_import(igniter, router, _panel_module) do
+      import_code = "import PhoenixFilament.Panel.Router"
+
+      Igniter.Project.Module.find_and_update_module!(igniter, router, fn zipper ->
+        case Igniter.Code.Common.move_to(zipper, fn z ->
+               match?(
+                 {:import, _, [{:__aliases__, _, _} | _]},
+                 z.node
+               ) and node_contains_module?(z.node, PhoenixFilament.Panel.Router)
+             end) do
+          {:ok, _} ->
+            # Already imported
+            {:ok, zipper}
+
+          :error ->
+            # Add import at the top of the module do block
+            case Igniter.Code.Common.move_to_do_block(zipper) do
+              {:ok, do_zipper} ->
+                {:ok, Igniter.Code.Common.add_code(do_zipper, import_code, placement: :before)}
+
+              :error ->
+                {:warning,
+                 """
+                 Could not automatically add `import PhoenixFilament.Panel.Router` to #{inspect(router)}.
+                 Please add it manually inside your router module:
+
+                     import PhoenixFilament.Panel.Router
+                 """}
+            end
+        end
+      end)
+    end
+
+    defp node_contains_module?({:import, _, [{:__aliases__, _, parts} | _]}, target_module) do
+      module_from_parts = Module.concat(parts)
+      module_from_parts == target_module
+    end
+
+    defp node_contains_module?(_, _), do: false
+
+    defp add_router_mount(igniter, router, panel_module) do
+      mount_code = "phoenix_filament_panel \"/admin\", #{inspect(panel_module)}"
+
+      # Try appending to the "/" browser scope first; fall back to add_notice
+      igniter =
+        Igniter.Libs.Phoenix.append_to_scope(igniter, "/", mount_code,
+          router: router,
+          with_pipelines: [:browser]
+        )
+
+      igniter
+    end
+
+    defp router_manual_notice(panel_module) do
+      """
+      Could not find a router to patch automatically.
+      Please add the following to your router.ex manually:
+
+      1. At the top of the router module (inside defmodule ... do):
+
+          import PhoenixFilament.Panel.Router
+
+      2. Inside your browser scope:
+
+          scope "/", #{inspect(panel_module |> Module.split() |> Enum.drop(-1) |> Module.concat())} do
+            pipe_through :browser
+
+            phoenix_filament_panel "/admin", #{inspect(panel_module)}
+          end
+      """
+    end
+
+    defp patch_app_js(igniter) do
+      app_js_path = "assets/js/app.js"
+      import_line = ~s|import PhxFilamentHooks from "./phx_filament_hooks"|
+      hooks_merge_comment = """
+      // Merge PhxFilamentHooks into your liveSocket hooks option, e.g.:
+      //   let liveSocket = new LiveSocket("/live", Socket, {hooks: {...Hooks, ...PhxFilamentHooks}})
+      """
+
+      if Igniter.exists?(igniter, app_js_path) do
+        Igniter.update_file(igniter, app_js_path, fn source ->
+          content = Rewrite.Source.get(source, :content)
+
+          if String.contains?(content, "phx_filament_hooks") do
+            source
+          else
+            new_content = import_line <> "\n" <> hooks_merge_comment <> content
+            Rewrite.Source.update(source, :content, new_content)
+          end
+        end)
+      else
+        Igniter.add_notice(igniter, """
+        Could not find assets/js/app.js to patch automatically.
+        Please add the following import at the top of your app.js:
+
+            import PhxFilamentHooks from "./phx_filament_hooks"
+
+        Then merge the hooks into your liveSocket configuration:
+
+            let liveSocket = new LiveSocket("/live", Socket, {
+              hooks: {...Hooks, ...PhxFilamentHooks}
+            })
+        """)
+      end
     end
   else
     use Mix.Task

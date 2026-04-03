@@ -10,15 +10,19 @@ defmodule Mix.Tasks.PhxFilament.Gen.Resource do
   ## What it does
 
   1. Creates a Resource module at `lib/{app_web}/admin/{name}_resource.ex`
-  2. Prints instructions for registering the resource in your Panel module
+  2. Attempts to register the resource in your Panel module automatically
+  3. Falls back to printing instructions if the Panel module cannot be found or patched
 
   ## Options
 
-  - `--repo` / `-r` — Ecto Repo module to use. Defaults to `{AppName}.Repo`.
+  - `--repo` / `-r` — Ecto Repo module to use. Auto-detected from `use Ecto.Repo` modules,
+    defaults to `{AppName}.Repo` if none found.
   """
 
   if Code.ensure_loaded?(Igniter) do
     use Igniter.Mix.Task
+
+    @shortdoc "Generates a PhoenixFilament resource"
 
     @impl Igniter.Mix.Task
     def info(_argv, _composing_task) do
@@ -43,15 +47,15 @@ defmodule Mix.Tasks.PhxFilament.Gen.Resource do
       panel_module = Module.concat([web_module, "Admin"])
       resource_module = Module.concat([panel_module, "#{schema_name}Resource"])
 
-      repo =
+      {igniter, repo} =
         case igniter.args.options[:repo] do
-          nil -> Module.concat([app_name_camel, "Repo"])
-          repo_string -> Module.concat([repo_string])
+          nil -> detect_repo(igniter, app_name_camel)
+          repo_string -> {igniter, Module.concat([repo_string])}
         end
 
       igniter
       |> create_resource_module(resource_module, schema_module, repo)
-      |> print_registration_instructions(panel_module, resource_module)
+      |> register_resource_in_panel(panel_module, resource_module)
     end
 
     defp create_resource_module(igniter, resource_module, schema_module, repo) do
@@ -81,16 +85,94 @@ defmodule Mix.Tasks.PhxFilament.Gen.Resource do
       Igniter.create_new_file(igniter, path, contents)
     end
 
-    defp print_registration_instructions(igniter, panel_module, resource_module) do
-      Igniter.add_notice(igniter, """
+    defp register_resource_in_panel(igniter, panel_module, resource_module) do
+      resource_entry = "resource #{inspect(resource_module)}, icon: \"hero-document-text\""
 
+      case Igniter.Project.Module.find_and_update_module(igniter, panel_module, fn zipper ->
+             # Try to find an existing resources do...end block
+             case find_resources_block(zipper) do
+               {:ok, resources_zipper} ->
+                 # Check if already registered
+                 content = zipper_to_string(resources_zipper)
+
+                 if String.contains?(content, inspect(resource_module)) do
+                   {:ok, zipper}
+                 else
+                   {:ok, Igniter.Code.Common.add_code(resources_zipper, resource_entry)}
+                 end
+
+               :error ->
+                 # No resources block — add one to the module body
+                 case Igniter.Code.Common.move_to_do_block(zipper) do
+                   {:ok, do_zipper} ->
+                     resources_block = """
+                     resources do
+                       #{resource_entry}
+                     end
+                     """
+
+                     {:ok, Igniter.Code.Common.add_code(do_zipper, resources_block)}
+
+                   :error ->
+                     {:warning,
+                      registration_manual_notice(panel_module, resource_module)}
+                 end
+             end
+           end) do
+        {:ok, igniter} ->
+          igniter
+
+        {:error, igniter} ->
+          Igniter.add_notice(igniter, registration_manual_notice(panel_module, resource_module))
+      end
+    end
+
+    defp find_resources_block(zipper) do
+      Igniter.Code.Common.move_to(zipper, fn z ->
+        case z.node do
+          {:resources, _, [[do: _]]} -> true
+          {:resources, _, [_block]} -> true
+          _ -> false
+        end
+      end)
+      |> case do
+        {:ok, resources_zipper} ->
+          Igniter.Code.Common.move_to_do_block(resources_zipper)
+
+        :error ->
+          :error
+      end
+    end
+
+    defp zipper_to_string(%Sourceror.Zipper{node: node}) do
+      node |> Macro.to_string()
+    rescue
+      _ -> ""
+    end
+
+    defp registration_manual_notice(panel_module, resource_module) do
+      """
       Resource created! Add it to your panel module (#{inspect(panel_module)}):
 
           resources do
             resource #{inspect(resource_module)},
               icon: "hero-document-text"
           end
-      """)
+      """
+    end
+
+    defp detect_repo(igniter, app_name_camel) do
+      default_repo = Module.concat([app_name_camel, "Repo"])
+
+      {igniter, matching} =
+        Igniter.Project.Module.find_all_matching_modules(igniter, fn _mod, zipper ->
+          Igniter.Code.Module.move_to_use(zipper, Ecto.Repo) != :error
+        end)
+
+      case matching do
+        [single_repo] -> {igniter, single_repo}
+        _ -> {igniter, default_repo}
+      end
     end
   else
     use Mix.Task
