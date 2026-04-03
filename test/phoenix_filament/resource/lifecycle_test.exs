@@ -313,22 +313,27 @@ defmodule PhoenixFilament.Resource.LifecycleTest do
 
   describe "function exports" do
     test "handle_save/2 is defined" do
+      Code.ensure_loaded!(Lifecycle)
       assert function_exported?(Lifecycle, :handle_save, 2)
     end
 
     test "handle_table_action/3 is defined" do
+      Code.ensure_loaded!(Lifecycle)
       assert function_exported?(Lifecycle, :handle_table_action, 3)
     end
 
     test "handle_table_patch/2 is defined" do
+      Code.ensure_loaded!(Lifecycle)
       assert function_exported?(Lifecycle, :handle_table_patch, 2)
     end
 
     test "apply_action/3 handles :edit" do
+      Code.ensure_loaded!(Lifecycle)
       assert function_exported?(Lifecycle, :apply_action, 3)
     end
 
     test "apply_action/3 handles :show" do
+      Code.ensure_loaded!(Lifecycle)
       assert function_exported?(Lifecycle, :apply_action, 3)
     end
   end
