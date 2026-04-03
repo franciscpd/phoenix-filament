@@ -1,0 +1,5 @@
+defmodule <%= @resource_module %> do
+  use PhoenixFilament.Resource,
+    schema: <%= @schema %>,
+    repo: <%= @repo %>
+end

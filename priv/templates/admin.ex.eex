@@ -1,0 +1,21 @@
+defmodule <%= @panel_module %> do
+  use PhoenixFilament.Panel,
+    path: "/admin",
+    brand_name: "<%= @brand_name %>"
+
+  # Add your resources here:
+  # resources do
+  #   resource <%= @panel_module %>.PostResource,
+  #     icon: "hero-document-text"
+  # end
+
+  # Add dashboard widgets:
+  # widgets do
+  #   widget <%= @panel_module %>.StatsWidget
+  # end
+
+  # Add community plugins:
+  # plugins do
+  #   plugin MyPlugin
+  # end
+end
