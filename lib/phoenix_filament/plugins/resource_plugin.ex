@@ -5,7 +5,7 @@ defmodule PhoenixFilament.Plugins.ResourcePlugin do
   @impl true
   def register(panel, opts) do
     resources = opts[:resources] || []
-    panel_path = panel.__panel__(:path)
+    panel_path = opts[:panel_path] || panel.__panel__(:path)
 
     %{
       nav_items:

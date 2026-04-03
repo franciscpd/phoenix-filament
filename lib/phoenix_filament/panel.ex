@@ -48,6 +48,11 @@ defmodule PhoenixFilament.Panel do
   @callback __panel__(:path) :: String.t()
   @callback __panel__(:resources) :: [map()]
   @callback __panel__(:widgets) :: [map()]
+  @callback __panel__(:all_nav_items) :: [map()]
+  @callback __panel__(:all_routes) :: [map()]
+  @callback __panel__(:all_widgets) :: [map()]
+  @callback __panel__(:all_hooks) :: [{atom(), function()}]
+  @callback __panel__(:plugins) :: [{module(), keyword()}]
 
   defmacro __using__(opts) do
     quote do
@@ -76,14 +81,8 @@ defmodule PhoenixFilament.Panel do
 
   defmacro __before_compile__(_env) do
     quote do
-      @impl PhoenixFilament.Panel
-      def __panel__(:opts), do: @_phx_filament_panel_opts
-
-      @impl PhoenixFilament.Panel
-      def __panel__(:path), do: @_phx_filament_panel_opts[:path]
-
-      @impl PhoenixFilament.Panel
-      def __panel__(:resources) do
+      # Pre-compute enriched resources to avoid calling __MODULE__.__panel__/1 at compile time
+      @_phx_filament_enriched_resources (
         @_phx_filament_panel_resources
         |> Enum.reverse()
         |> Enum.map(fn {mod, opts} ->
@@ -112,10 +111,10 @@ defmodule PhoenixFilament.Panel do
                 |> String.capitalize()
           }
         end)
-      end
+      )
 
-      @impl PhoenixFilament.Panel
-      def __panel__(:widgets) do
+      # Pre-compute enriched widgets to avoid calling __MODULE__.__panel__/1 at compile time
+      @_phx_filament_enriched_widgets (
         @_phx_filament_panel_widgets
         |> Enum.reverse()
         |> Enum.map(fn {mod, opts} ->
@@ -131,11 +130,61 @@ defmodule PhoenixFilament.Panel do
           }
         end)
         |> Enum.sort_by(& &1.sort)
-      end
+      )
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:opts), do: @_phx_filament_panel_opts
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:path), do: @_phx_filament_panel_opts[:path]
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:resources), do: @_phx_filament_enriched_resources
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:widgets), do: @_phx_filament_enriched_widgets
+
+      # Build full plugin list: built-in first, then community
+      @_phx_filament_all_plugins (
+        (if @_phx_filament_enriched_resources != [] do
+           [{PhoenixFilament.Plugins.ResourcePlugin,
+             [resources: @_phx_filament_enriched_resources,
+              panel_path: @_phx_filament_panel_opts[:path]]}]
+         else
+           []
+         end) ++
+          (if @_phx_filament_enriched_widgets != [] do
+             [{PhoenixFilament.Plugins.WidgetPlugin,
+               [widgets: @_phx_filament_enriched_widgets]}]
+           else
+             []
+           end) ++
+          (@_phx_filament_panel_plugins |> Enum.reverse())
+      )
+
+      @_phx_filament_resolved PhoenixFilament.Plugin.Resolver.resolve(
+                                @_phx_filament_all_plugins,
+                                __MODULE__
+                              )
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:all_nav_items), do: @_phx_filament_resolved.all_nav_items
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:all_routes), do: @_phx_filament_resolved.all_routes
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:all_widgets), do: @_phx_filament_resolved.all_widgets
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:all_hooks), do: @_phx_filament_resolved.all_hooks
+
+      @impl PhoenixFilament.Panel
+      def __panel__(:plugins), do: @_phx_filament_all_plugins
 
       def __panel__(key) do
         raise ArgumentError,
-              "unknown panel key #{inspect(key)}. Valid keys are: #{inspect([:opts, :path, :resources, :widgets])}"
+              "unknown panel key #{inspect(key)}. Valid keys are: #{inspect([:opts, :path, :resources, :widgets, :all_nav_items, :all_routes, :all_widgets, :all_hooks, :plugins])}"
       end
     end
   end
