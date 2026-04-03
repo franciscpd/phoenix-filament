@@ -83,7 +83,7 @@ defmodule PhoenixFilament.Plugin do
   @type register_result :: %{
           optional(:nav_items) => [nav_item()],
           optional(:routes) => [route()],
-          optional(:widgets) => [map()],
+          optional(:widgets) => [%{module: module(), sort: non_neg_integer(), column_span: pos_integer()}],
           optional(:hooks) => [{atom(), function()}]
         }
 

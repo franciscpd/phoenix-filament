@@ -121,8 +121,10 @@ defmodule PhoenixFilament.Panel.Hook do
   end
 
   defp attach_plugin_hooks(socket, hooks) do
-    Enum.reduce(hooks, socket, fn {stage, fun}, sock ->
-      hook_name = :"plugin_hook_#{:erlang.phash2(fun)}"
+    hooks
+    |> Enum.with_index()
+    |> Enum.reduce(socket, fn {{stage, fun}, idx}, sock ->
+      hook_name = :"plugin_hook_#{idx}"
       Phoenix.LiveView.attach_hook(sock, hook_name, stage, fun)
     end)
   end

@@ -24,6 +24,7 @@ defmodule PhoenixFilament.Panel.Navigation do
   end
 
   defp add_active(item, current_path) do
-    Map.put(item, :active, String.starts_with?(current_path, item.path))
+    active = is_binary(item.path) and String.starts_with?(current_path, item.path)
+    Map.put(item, :active, active)
   end
 end

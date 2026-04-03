@@ -39,6 +39,20 @@ defmodule PhoenixFilament.Panel.DSL do
 
   defmacro plugin(module, opts \\ []) do
     quote do
+      mod = unquote(module)
+
+      case Code.ensure_compiled(mod) do
+        {:module, _} ->
+          unless function_exported?(mod, :register, 2) do
+            raise ArgumentError,
+                  "#{inspect(mod)} does not implement PhoenixFilament.Plugin behaviour " <>
+                  "(missing register/2). Did you forget `use PhoenixFilament.Plugin`?"
+          end
+
+        {:error, _} ->
+          :ok
+      end
+
       @_phx_filament_panel_plugins {unquote(module), unquote(opts)}
     end
   end
