@@ -49,7 +49,7 @@ Visit `http://localhost:4000/admin` to see your admin panel.
 
 ## Requirements
 
-- Elixir >= 1.15
+- Elixir >= 1.17
 - Phoenix >= 1.7 (1.8+ recommended for daisyUI 5 out-of-the-box)
 - Phoenix LiveView >= 1.0
 - Ecto >= 3.11

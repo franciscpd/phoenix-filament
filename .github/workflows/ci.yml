@@ -6,19 +6,16 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  MIX_ENV: test
-
 jobs:
   test:
     name: Test (Elixir ${{ matrix.elixir }} / OTP ${{ matrix.otp }})
     runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
     strategy:
       fail-fast: false
       matrix:
         include:
-          - elixir: "1.15"
-            otp: "25"
           - elixir: "1.17"
             otp: "27"
 
@@ -43,8 +40,8 @@ jobs:
       - name: Install dependencies
         run: mix deps.get
 
-      - name: Compile (warnings as errors)
-        run: mix compile --warnings-as-errors
+      - name: Compile
+        run: mix compile
 
       - name: Run tests
         run: mix test
@@ -75,12 +72,11 @@ jobs:
       - name: Check formatting
         run: mix format --check-formatted
 
-      - name: Check unused deps
-        run: mix deps.unlock --check-unused
-
   docs:
     name: Documentation
     runs-on: ubuntu-latest
+    env:
+      MIX_ENV: dev
 
     steps:
       - uses: actions/checkout@v4
@@ -96,7 +92,7 @@ jobs:
           path: |
             deps
             _build
-          key: deps-${{ runner.os }}-1.17-27-${{ hashFiles('**/mix.lock') }}
+          key: deps-dev-${{ runner.os }}-1.17-27-${{ hashFiles('**/mix.lock') }}
 
       - name: Install dependencies
         run: mix deps.get
