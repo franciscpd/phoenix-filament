@@ -34,7 +34,10 @@ defmodule PhoenixFilament.Panel.Options do
                    ]
                  )
 
+  @plugin_schema NimbleOptions.new!([])
+
   def panel_schema, do: @panel_schema
   def resource_schema, do: @resource_schema
   def widget_schema, do: @widget_schema
+  def plugin_schema, do: @plugin_schema
 end

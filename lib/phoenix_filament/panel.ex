@@ -66,6 +66,7 @@ defmodule PhoenixFilament.Panel do
 
       Module.register_attribute(__MODULE__, :_phx_filament_panel_resources, accumulate: true)
       Module.register_attribute(__MODULE__, :_phx_filament_panel_widgets, accumulate: true)
+      Module.register_attribute(__MODULE__, :_phx_filament_panel_plugins, accumulate: true)
 
       import PhoenixFilament.Panel.DSL
 
