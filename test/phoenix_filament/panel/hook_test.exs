@@ -66,6 +66,7 @@ defmodule PhoenixFilament.Panel.HookTest do
       assert_raise RuntimeError, "plugin crash!", fn ->
         CrashingPlugin.boot(:fake_socket)
       end
+
       # BootTracker still works independently
       assert BootTracker.boot(:fake_socket) == :fake_socket
     end
