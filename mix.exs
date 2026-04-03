@@ -16,7 +16,8 @@ defmodule PhoenixFilament.MixProject do
       source_url: @source_url,
       description:
         "Rapid application development framework for Phoenix — declarative admin panels from Ecto schemas",
-      package: package()
+      package: package(),
+      docs: docs()
     ]
   end
 
@@ -38,14 +39,40 @@ defmodule PhoenixFilament.MixProject do
       {:phoenix_live_view, "~> 1.0", optional: true},
       {:phoenix_html, "~> 4.1", optional: true},
       {:phoenix_ecto, "~> 4.4", optional: true},
-      {:ex_doc, "~> 0.34", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false},
+      {:igniter, "~> 0.7", optional: true}
     ]
   end
 
   defp package do
     [
       licenses: ["MIT"],
-      links: %{"GitHub" => @source_url}
+      links: %{"GitHub" => @source_url},
+      files: ~w(lib priv guides .formatter.exs mix.exs README.md LICENSE)
+    ]
+  end
+
+  defp docs do
+    [
+      main: "PhoenixFilament",
+      extras: [
+        "guides/getting-started.md",
+        "guides/resources.md",
+        "guides/plugins.md",
+        "guides/theming.md"
+      ],
+      groups_for_extras: [
+        Guides: ~r/guides\/.*/
+      ],
+      groups_for_modules: [
+        Core: [PhoenixFilament, PhoenixFilament.Resource, PhoenixFilament.Panel],
+        Components: ~r/PhoenixFilament\.Components\..*/,
+        "Form Builder": ~r/PhoenixFilament\.Form\..*/,
+        "Table Builder": ~r/PhoenixFilament\.Table\..*/,
+        Widgets: ~r/PhoenixFilament\.Widget\..*/,
+        "Plugin System": [PhoenixFilament.Plugin, PhoenixFilament.Plugin.Resolver],
+        "Mix Tasks": ~r/Mix\.Tasks\..*/
+      ]
     ]
   end
 end
