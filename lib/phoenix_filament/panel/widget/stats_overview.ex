@@ -31,8 +31,18 @@ defmodule PhoenixFilament.Widget.StatsOverview do
 
       def update(assigns, socket) do
         socket = Phoenix.Component.assign(socket, assigns)
-        stats = __MODULE__.stats(socket.assigns)
-        socket = Phoenix.Component.assign(socket, :stats, stats)
+
+        {stats, widget_error} =
+          try do
+            {__MODULE__.stats(socket.assigns), nil}
+          rescue
+            e -> {[], Exception.message(e)}
+          end
+
+        socket =
+          socket
+          |> Phoenix.Component.assign(:stats, stats)
+          |> Phoenix.Component.assign(:widget_error, widget_error)
 
         socket =
           if @polling_interval && !socket.assigns[:_polling_started] do
@@ -54,13 +64,17 @@ defmodule PhoenixFilament.Widget.StatsOverview do
   end
 
   use Phoenix.Component
+  import PhoenixFilament.Components.Icon
 
   def render(assigns) do
     ~H"""
-    <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+    <div :if={assigns[:widget_error]} class="alert alert-error">
+      <span>Widget error: {assigns[:widget_error]}</span>
+    </div>
+    <div :if={!assigns[:widget_error]} class="stats stats-vertical lg:stats-horizontal shadow w-full">
       <div :for={s <- @stats} class="stat">
         <div :if={s.icon} class="stat-figure text-primary">
-          <span>{s.icon}</span>
+          <.icon name={s.icon} />
         </div>
         <div class="stat-title">{s.label}</div>
         <div class={["stat-value", stat_color_class(s.color)]}>{s.value}</div>

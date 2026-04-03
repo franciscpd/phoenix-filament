@@ -22,9 +22,21 @@ defmodule PhoenixFilament.Widget.Chart do
 
       def update(assigns, socket) do
         socket = Phoenix.Component.assign(socket, assigns)
-        data = __MODULE__.chart_data(socket.assigns)
-        chart_type = __MODULE__.chart_type()
-        chart_opts = __MODULE__.chart_options()
+
+        {chart_config, widget_error} =
+          try do
+            data = __MODULE__.chart_data(socket.assigns)
+            chart_type = __MODULE__.chart_type()
+            chart_opts = __MODULE__.chart_options()
+            {Jason.encode!(%{type: chart_type, data: data, options: chart_opts}), nil}
+          rescue
+            e -> {nil, Exception.message(e)}
+          end
+
+        socket =
+          socket
+          |> Phoenix.Component.assign(:chart_config, chart_config)
+          |> Phoenix.Component.assign(:widget_error, widget_error)
 
         socket =
           if @polling_interval && !socket.assigns[:_polling_started] do
@@ -34,8 +46,6 @@ defmodule PhoenixFilament.Widget.Chart do
             socket
           end
 
-        chart_config = %{type: chart_type, data: data, options: chart_opts}
-        socket = Phoenix.Component.assign(socket, :chart_config, Jason.encode!(chart_config))
         {:ok, socket}
       end
 
@@ -51,7 +61,10 @@ defmodule PhoenixFilament.Widget.Chart do
 
   def render(assigns) do
     ~H"""
-    <div class="card bg-base-100 shadow">
+    <div :if={assigns[:widget_error]} class="alert alert-error">
+      <span>Widget error: {assigns[:widget_error]}</span>
+    </div>
+    <div :if={!assigns[:widget_error]} class="card bg-base-100 shadow">
       <div class="card-body">
         <canvas
           id={@id <> "-canvas"}

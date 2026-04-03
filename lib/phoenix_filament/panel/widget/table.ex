@@ -34,8 +34,19 @@ defmodule PhoenixFilament.Widget.Table do
 
       def update(assigns, socket) do
         socket = Phoenix.Component.assign(socket, assigns)
-        socket = Phoenix.Component.assign(socket, :widget_heading, __MODULE__.heading())
-        socket = Phoenix.Component.assign(socket, :widget_columns, __MODULE__.columns())
+
+        {columns, widget_error} =
+          try do
+            {__MODULE__.columns(), nil}
+          rescue
+            e -> {[], Exception.message(e)}
+          end
+
+        socket =
+          socket
+          |> Phoenix.Component.assign(:widget_heading, __MODULE__.heading())
+          |> Phoenix.Component.assign(:widget_columns, columns)
+          |> Phoenix.Component.assign(:widget_error, widget_error)
 
         socket =
           if @polling_interval && !socket.assigns[:_polling_started] do
@@ -62,7 +73,10 @@ defmodule PhoenixFilament.Widget.Table do
     assigns = Map.put_new(assigns, :rows, [])
 
     ~H"""
-    <div class="card bg-base-100 shadow">
+    <div :if={assigns[:widget_error]} class="alert alert-error">
+      <span>Widget error: {assigns[:widget_error]}</span>
+    </div>
+    <div :if={!assigns[:widget_error]} class="card bg-base-100 shadow">
       <div class="card-body">
         <h3 class="card-title text-sm">{@widget_heading}</h3>
         <div class="overflow-x-auto">

@@ -2,6 +2,7 @@ defmodule PhoenixFilament.Panel.Layout do
   @moduledoc false
   use Phoenix.Component
   alias Phoenix.LiveView.JS
+  import PhoenixFilament.Components.Icon
 
   # panel/1 — root layout
   # Uses assigns directly (not attr declarations) since this is a layout function
@@ -83,7 +84,7 @@ defmodule PhoenixFilament.Panel.Layout do
         <ul class="menu">
           <li :for={item <- group.items}>
             <a href={item.path} class={item.active && "active"}>
-              <span :if={item.icon}>{item.icon}</span>
+              <.icon :if={item.icon} name={item.icon} />
               <span
                 :if={!item.icon}
                 class="w-5 h-5 bg-base-300 rounded flex items-center justify-center text-xs"
@@ -100,7 +101,7 @@ defmodule PhoenixFilament.Panel.Layout do
       <ul :if={@nav.ungrouped != []} class="menu mt-4">
         <li :for={item <- @nav.ungrouped}>
           <a href={item.path} class={item.active && "active"}>
-            <span :if={item.icon}>{item.icon}</span>
+            <.icon :if={item.icon} name={item.icon} />
             <span
               :if={!item.icon}
               class="w-5 h-5 bg-base-300 rounded flex items-center justify-center text-xs"
@@ -159,12 +160,18 @@ defmodule PhoenixFilament.Panel.Layout do
   attr :items, :list, required: true
 
   def breadcrumbs(assigns) do
+    assigns =
+      assigns
+      |> assign(:init_items, Enum.slice(assigns.items, 0..-2//1))
+      |> assign(:last_item, List.last(assigns.items))
+
     ~H"""
     <div :if={@items != []} class="breadcrumbs text-sm px-6 pt-4">
       <ul>
-        <li :for={item <- @items}>
+        <li :for={item <- @init_items}>
           <a href={item.path}>{item.label}</a>
         </li>
+        <li :if={@last_item}>{@last_item.label}</li>
       </ul>
     </div>
     """
