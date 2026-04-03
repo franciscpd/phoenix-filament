@@ -20,6 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 6: Panel Shell and Auth Hook** - Admin panel routing macro, sidebar navigation, breadcrumbs, responsive layout, BYO auth hook, and flash notifications
 - [ ] **Phase 7: Plugin Architecture** - Runtime plugin behaviour contract, per-panel plugin registry, built-in Resource system registered as a plugin, and plugin developer guide
 - [ ] **Phase 8: Distribution and Installer** - Hex package publication, `mix phx_filament.install` Igniter generator, and getting-started documentation
+- [ ] **Phase 9: Tech Debt Cleanup** - Close all tech debt from v0.1.0 audit: fix component consistency, flaky tests, shallow coverage, and untested installer paths
 
 ## Phase Details
 
@@ -124,10 +125,25 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Following the getting-started documentation from "installation" through "first resource" produces a working admin page for a user-defined Ecto schema
 **Plans**: TBD
 
+### Phase 9: Tech Debt Cleanup
+**Goal**: Close all tech debt items identified in the v0.1.0 milestone audit — fix inconsistent component usage, flaky tests, shallow test coverage, and untested installer paths — so v0.1.0 ships with zero known debt.
+**Depends on**: Phase 8
+**Requirements**: None (gap closure phase)
+**Gap Closure**: Closes all 8 tech debt items from v0.1.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. TableRenderer uses `PhoenixFilament.Components.Button` instead of inline daisyUI classes
+  2. LifecycleTest intermittent failure is fixed (no flaky tests in CI)
+  3. Panel.Hook and Dashboard have meaningful integration tests beyond module export checks
+  4. Plugin boot/hook lifecycle tested with socket-like verification
+  5. Icon rendering documented with clear setup instructions for host app Heroicons
+  6. Theme switcher toggle target is configurable (not hardcoded to "dark")
+  7. `mix format --check-formatted` and `mix test` pass with zero warnings in CI
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -139,3 +155,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 6. Panel Shell and Auth Hook | 0/TBD | Not started | - |
 | 7. Plugin Architecture | 0/TBD | Not started | - |
 | 8. Distribution and Installer | 0/TBD | Not started | - |
+| 9. Tech Debt Cleanup | 0/TBD | Not started | - |
