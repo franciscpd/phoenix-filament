@@ -18,6 +18,7 @@ defmodule PhoenixFilament.Panel.Hook do
       |> assign(:panel_logo, opts[:logo])
       |> assign(:panel_theme, opts[:theme])
       |> assign(:panel_theme_switcher, opts[:theme_switcher])
+      |> assign(:panel_theme_switcher_target, opts[:theme_switcher_target])
       |> assign(:panel_path, panel_path)
       |> assign(:panel_nav, Navigation.build_tree(nav_items, current_path))
       |> assign(:current_resource, match_resource(resources, panel_path, current_path))

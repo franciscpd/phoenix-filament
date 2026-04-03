@@ -27,6 +27,7 @@ defmodule PhoenixFilament.Panel.Layout do
           logo={assigns[:panel_logo]}
           path={assigns[:panel_path] || "/"}
           theme_switcher={assigns[:panel_theme_switcher] || false}
+          theme_switcher_target={assigns[:panel_theme_switcher_target] || "dark"}
         />
       </div>
     </div>
@@ -39,6 +40,7 @@ defmodule PhoenixFilament.Panel.Layout do
   attr(:logo, :string, default: nil)
   attr(:path, :string, required: true)
   attr(:theme_switcher, :boolean, default: false)
+  attr(:theme_switcher_target, :string, default: "dark")
 
   def sidebar(assigns) do
     ~H"""
@@ -116,7 +118,7 @@ defmodule PhoenixFilament.Panel.Layout do
       <%!-- Theme switcher --%>
       <div :if={@theme_switcher} class="mt-auto pt-4 border-t border-base-300">
         <label class="swap swap-rotate">
-          <input type="checkbox" class="theme-controller" value="dark" />
+          <input type="checkbox" class="theme-controller" value={@theme_switcher_target} />
           <span class="swap-on">🌙</span>
           <span class="swap-off">☀️</span>
         </label>

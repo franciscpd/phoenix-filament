@@ -43,6 +43,11 @@ defmodule PhoenixFilament.Panel.OptionsTest do
       assert validated[:theme_switcher] == false
     end
 
+    test "defaults theme_switcher_target to dark" do
+      {:ok, validated} = NimbleOptions.validate([path: "/admin"], Options.panel_schema())
+      assert validated[:theme_switcher_target] == "dark"
+    end
+
     test "rejects unknown options" do
       assert {:error, %NimbleOptions.ValidationError{}} =
                NimbleOptions.validate([path: "/admin", bogus: true], Options.panel_schema())

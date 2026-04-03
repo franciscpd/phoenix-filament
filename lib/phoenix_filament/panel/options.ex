@@ -19,6 +19,11 @@ defmodule PhoenixFilament.Panel.Options do
                   logo: [type: :string, doc: "Logo URL for sidebar header"],
                   theme: [type: :string, doc: "daisyUI theme name"],
                   theme_switcher: [type: :boolean, default: false, doc: "Show light/dark toggle"],
+                  theme_switcher_target: [
+                    type: :string,
+                    default: "dark",
+                    doc: "Theme to toggle to when theme switcher is activated"
+                  ],
                   pubsub: [type: :atom, doc: "PubSub module for session revocation"],
                   dashboard: [type: :atom, doc: "Custom LiveView to override default dashboard"]
                 )
