@@ -1,11 +1,9 @@
 defmodule PhoenixFilament.Panel.Navigation do
   @moduledoc false
 
-  def build_tree(resources, panel_path, current_path) do
-    {grouped, ungrouped} =
-      resources
-      |> Enum.map(fn r -> build_item(r, panel_path, current_path) end)
-      |> Enum.split_with(fn item -> item.nav_group != nil end)
+  def build_tree(nav_items, current_path) do
+    items = Enum.map(nav_items, &add_active(&1, current_path))
+    {grouped, ungrouped} = Enum.split_with(items, &(&1.nav_group != nil))
 
     groups =
       grouped
@@ -25,18 +23,7 @@ defmodule PhoenixFilament.Panel.Navigation do
     %{groups: groups, ungrouped: ungrouped}
   end
 
-  defp build_item(resource, panel_path, current_path) do
-    path = "#{panel_path}/#{resource.slug}"
-    label = resource.plural_label
-
-    %{
-      label: label,
-      path: path,
-      icon: resource.icon,
-      icon_fallback: String.first(label),
-      nav_group: resource.nav_group,
-      active: String.starts_with?(current_path, path),
-      module: resource.module
-    }
+  defp add_active(item, current_path) do
+    Map.put(item, :active, String.starts_with?(current_path, item.path))
   end
 end

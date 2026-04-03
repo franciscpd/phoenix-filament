@@ -3,21 +3,20 @@ defmodule PhoenixFilament.Panel.NavigationTest do
 
   alias PhoenixFilament.Panel.Navigation
 
-  @resources [
-    %{module: PostResource, icon: "hero-document-text", nav_group: "Content",
-      slug: "posts", label: "Post", plural_label: "Posts"},
-    %{module: CategoryResource, icon: "hero-tag", nav_group: "Content",
-      slug: "categories", label: "Category", plural_label: "Categories"},
-    %{module: UserResource, icon: "hero-users", nav_group: "Management",
-      slug: "users", label: "User", plural_label: "Users"},
-    %{module: SettingsResource, icon: nil, nav_group: nil,
-      slug: "settings", label: "Setting", plural_label: "Settings"}
+  @nav_items [
+    %{label: "Posts", path: "/admin/posts", icon: "hero-document-text",
+      icon_fallback: "P", nav_group: "Content"},
+    %{label: "Categories", path: "/admin/categories", icon: "hero-tag",
+      icon_fallback: "C", nav_group: "Content"},
+    %{label: "Users", path: "/admin/users", icon: "hero-users",
+      icon_fallback: "U", nav_group: "Management"},
+    %{label: "Settings", path: "/admin/settings", icon: nil,
+      icon_fallback: "S", nav_group: nil}
   ]
 
-  describe "build_tree/3" do
-    test "groups resources by nav_group" do
-      tree = Navigation.build_tree(@resources, "/admin", "/admin/posts")
-
+  describe "build_tree/2" do
+    test "groups nav items by nav_group" do
+      tree = Navigation.build_tree(@nav_items, "/admin/posts")
       assert length(tree.groups) == 2
       [content, management] = tree.groups
       assert content.label == "Content"
@@ -26,46 +25,49 @@ defmodule PhoenixFilament.Panel.NavigationTest do
       assert length(management.items) == 1
     end
 
-    test "ungrouped resources appear separately" do
-      tree = Navigation.build_tree(@resources, "/admin", "/admin/settings")
+    test "ungrouped items appear separately" do
+      tree = Navigation.build_tree(@nav_items, "/admin/settings")
       assert length(tree.ungrouped) == 1
       assert hd(tree.ungrouped).label == "Settings"
     end
 
-    test "marks active resource by path prefix match" do
-      tree = Navigation.build_tree(@resources, "/admin", "/admin/posts")
-
+    test "marks active item by path prefix match" do
+      tree = Navigation.build_tree(@nav_items, "/admin/posts")
       [content | _] = tree.groups
       [posts, categories] = content.items
       assert posts.active == true
       assert categories.active == false
     end
 
-    test "marks active for nested paths (e.g., /admin/posts/123/edit)" do
-      tree = Navigation.build_tree(@resources, "/admin", "/admin/posts/123/edit")
-
+    test "marks active for nested paths" do
+      tree = Navigation.build_tree(@nav_items, "/admin/posts/123/edit")
       [content | _] = tree.groups
       [posts | _] = content.items
       assert posts.active == true
     end
 
-    test "builds correct paths from panel_path + slug" do
-      tree = Navigation.build_tree(@resources, "/admin", "/admin")
-
-      [content | _] = tree.groups
-      [posts | _] = content.items
-      assert posts.path == "/admin/posts"
-    end
-
     test "preserves declaration order within groups" do
-      tree = Navigation.build_tree(@resources, "/admin", "/admin")
+      tree = Navigation.build_tree(@nav_items, "/admin")
       [content | _] = tree.groups
       labels = Enum.map(content.items, & &1.label)
       assert labels == ["Posts", "Categories"]
     end
 
-    test "icon fallback to first letter when nil" do
-      tree = Navigation.build_tree(@resources, "/admin", "/admin")
+    test "merges non-adjacent groups with same name" do
+      items = [
+        %{label: "A", path: "/a", icon: nil, icon_fallback: "A", nav_group: "Blog"},
+        %{label: "B", path: "/b", icon: nil, icon_fallback: "B", nav_group: "Admin"},
+        %{label: "C", path: "/c", icon: nil, icon_fallback: "C", nav_group: "Blog"}
+      ]
+      tree = Navigation.build_tree(items, "/")
+      assert length(tree.groups) == 2
+      [blog | _] = tree.groups
+      assert blog.label == "Blog"
+      assert length(blog.items) == 2
+    end
+
+    test "icon_fallback preserved from input" do
+      tree = Navigation.build_tree(@nav_items, "/admin")
       [settings] = tree.ungrouped
       assert settings.icon_fallback == "S"
     end

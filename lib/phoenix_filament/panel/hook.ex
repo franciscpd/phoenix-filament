@@ -7,6 +7,7 @@ defmodule PhoenixFilament.Panel.Hook do
   def on_mount({:panel, panel_module}, _params, _session, socket) do
     opts = panel_module.__panel__(:opts)
     resources = panel_module.__panel__(:resources)
+    nav_items = panel_module.__panel__(:all_nav_items)
     panel_path = opts[:path]
     current_path = current_path_from_socket(socket)
 
@@ -18,7 +19,7 @@ defmodule PhoenixFilament.Panel.Hook do
       |> assign(:panel_theme, opts[:theme])
       |> assign(:panel_theme_switcher, opts[:theme_switcher])
       |> assign(:panel_path, panel_path)
-      |> assign(:panel_nav, Navigation.build_tree(resources, panel_path, current_path))
+      |> assign(:panel_nav, Navigation.build_tree(nav_items, current_path))
       |> assign(:current_resource, match_resource(resources, panel_path, current_path))
       |> assign(:breadcrumbs, build_breadcrumbs(opts, resources, panel_path, current_path))
 
@@ -28,7 +29,7 @@ defmodule PhoenixFilament.Panel.Hook do
       Phoenix.LiveView.attach_hook(socket, :panel_nav_update, :handle_params, fn
         _params, uri, socket ->
           path = URI.parse(uri).path
-          nav = Navigation.build_tree(resources, panel_path, path)
+          nav = Navigation.build_tree(nav_items, path)
           crumbs = build_breadcrumbs(opts, resources, panel_path, path)
           resource = match_resource(resources, panel_path, path)
 
