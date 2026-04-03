@@ -5,6 +5,9 @@ defmodule PhoenixFilament.Widget.Chart do
 
   @callback chart_type() :: :line | :bar | :pie | :doughnut
   @callback chart_data(assigns :: map()) :: %{labels: [String.t()], datasets: [map()]}
+  @callback chart_options() :: map()
+
+  @optional_callbacks [chart_options: 0]
 
   defmacro __using__(_opts) do
     quote do
@@ -13,12 +16,22 @@ defmodule PhoenixFilament.Widget.Chart do
 
       @polling_interval nil
 
+      @doc "Override to provide Chart.js options map. Defaults to empty map."
+      def chart_options, do: %{}
+      defoverridable chart_options: 0
+
       def update(assigns, socket) do
         socket = Phoenix.Component.assign(socket, assigns)
         data = __MODULE__.chart_data(socket.assigns)
         chart_type = __MODULE__.chart_type()
+        chart_opts = __MODULE__.chart_options()
 
-        chart_config = %{type: chart_type, data: data, options: %{}}
+        if @polling_interval && !socket.assigns[:_polling_started] do
+          Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
+          socket = Phoenix.Component.assign(socket, :_polling_started, true)
+        end
+
+        chart_config = %{type: chart_type, data: data, options: chart_opts}
         socket = Phoenix.Component.assign(socket, :chart_config, Jason.encode!(chart_config))
         {:ok, socket}
       end

@@ -6,6 +6,22 @@ defmodule PhoenixFilament.Widget.Table do
   @callback columns() :: [PhoenixFilament.Column.t()]
   @callback heading() :: String.t()
 
+  @doc """
+  Optional callback to provide an Ecto query for fetching rows.
+
+  When implemented, your widget's `update/2` override should execute the query
+  against your Repo and assign the results to the `:rows` assign. Example:
+
+      def update(assigns, socket) do
+        {:ok, socket} = super(assigns, socket)
+        rows = MyApp.Repo.all(query())
+        {:ok, Phoenix.Component.assign(socket, :rows, rows)}
+      end
+  """
+  @callback query() :: Ecto.Query.t()
+
+  @optional_callbacks [query: 0]
+
   defmacro __using__(_opts) do
     quote do
       use Phoenix.LiveComponent
@@ -20,6 +36,12 @@ defmodule PhoenixFilament.Widget.Table do
         socket = Phoenix.Component.assign(socket, assigns)
         socket = Phoenix.Component.assign(socket, :widget_heading, __MODULE__.heading())
         socket = Phoenix.Component.assign(socket, :widget_columns, __MODULE__.columns())
+
+        if @polling_interval && !socket.assigns[:_polling_started] do
+          Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
+          socket = Phoenix.Component.assign(socket, :_polling_started, true)
+        end
+
         {:ok, socket}
       end
 

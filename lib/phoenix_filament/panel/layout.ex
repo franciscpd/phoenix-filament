@@ -1,6 +1,7 @@
 defmodule PhoenixFilament.Panel.Layout do
   @moduledoc false
   use Phoenix.Component
+  alias Phoenix.LiveView.JS
 
   # panel/1 — root layout
   # Uses assigns directly (not attr declarations) since this is a layout function
@@ -175,10 +176,22 @@ defmodule PhoenixFilament.Panel.Layout do
   def flash_group(assigns) do
     ~H"""
     <div class="toast toast-end z-50">
-      <div :if={msg = Phoenix.Flash.get(@flash, :info)} class="alert alert-success">
+      <div
+        :if={msg = Phoenix.Flash.get(@flash, :info)}
+        id="flash-info"
+        class="alert alert-success"
+        phx-mounted={JS.hide(transition: {"transition-opacity ease-out duration-1000", "opacity-100", "opacity-0"}, time: 5000)}
+        phx-click={JS.push("lv:clear-flash", value: %{key: "info"}) |> JS.hide(to: "#flash-info")}
+      >
         <span>{msg}</span>
       </div>
-      <div :if={msg = Phoenix.Flash.get(@flash, :error)} class="alert alert-error">
+      <div
+        :if={msg = Phoenix.Flash.get(@flash, :error)}
+        id="flash-error"
+        class="alert alert-error"
+        phx-mounted={JS.hide(transition: {"transition-opacity ease-out duration-1000", "opacity-100", "opacity-0"}, time: 5000)}
+        phx-click={JS.push("lv:clear-flash", value: %{key: "error"}) |> JS.hide(to: "#flash-error")}
+      >
         <span>{msg}</span>
       </div>
     </div>

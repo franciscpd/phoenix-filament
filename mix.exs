@@ -33,6 +33,7 @@ defmodule PhoenixFilament.MixProject do
     [
       {:ecto, "~> 3.11"},
       {:nimble_options, "~> 1.0"},
+      {:jason, "~> 1.2"},
       {:phoenix, "~> 1.7", optional: true},
       {:phoenix_live_view, "~> 1.0", optional: true},
       {:phoenix_html, "~> 4.1", optional: true},

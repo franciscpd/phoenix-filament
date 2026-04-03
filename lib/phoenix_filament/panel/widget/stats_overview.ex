@@ -33,6 +33,12 @@ defmodule PhoenixFilament.Widget.StatsOverview do
         socket = Phoenix.Component.assign(socket, assigns)
         stats = __MODULE__.stats(socket.assigns)
         socket = Phoenix.Component.assign(socket, :stats, stats)
+
+        if @polling_interval && !socket.assigns[:_polling_started] do
+          Process.send_after(self(), {:widget_refresh, __MODULE__}, @polling_interval)
+          socket = Phoenix.Component.assign(socket, :_polling_started, true)
+        end
+
         {:ok, socket}
       end
 
@@ -56,9 +62,48 @@ defmodule PhoenixFilament.Widget.StatsOverview do
         <div class="stat-title">{s.label}</div>
         <div class={["stat-value", stat_color_class(s.color)]}>{s.value}</div>
         <div :if={s.description} class="stat-desc">{s.description}</div>
+        <.sparkline :if={s.chart} data={s.chart} />
       </div>
     </div>
     """
+  end
+
+  attr :data, :list, required: true
+
+  def sparkline(assigns) do
+    ~H"""
+    <div class="stat-figure">
+      <svg viewBox={"0 0 #{length(@data) * 10} 40"} class="h-10 w-20 overflow-visible">
+        <polyline
+          points={sparkline_points(@data)}
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="text-primary"
+        />
+      </svg>
+    </div>
+    """
+  end
+
+  defp sparkline_points([]), do: ""
+
+  defp sparkline_points(data) do
+    max_val = Enum.max(data, fn -> 1 end)
+    min_val = Enum.min(data, fn -> 0 end)
+    range = max(max_val - min_val, 1)
+    total = length(data)
+
+    data
+    |> Enum.with_index()
+    |> Enum.map(fn {val, i} ->
+      x = if total > 1, do: i * 10, else: 0
+      y = 40 - round((val - min_val) / range * 36) - 2
+      "#{x},#{y}"
+    end)
+    |> Enum.join(" ")
   end
 
   defp stat_color_class(:success), do: "text-success"
