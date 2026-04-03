@@ -20,7 +20,7 @@ jobs:
             otp: "27"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: erlef/setup-beam@v1
         with:
@@ -28,7 +28,7 @@ jobs:
           otp-version: ${{ matrix.otp }}
 
       - name: Restore deps cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             deps
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: erlef/setup-beam@v1
         with:
@@ -59,7 +59,7 @@ jobs:
           otp-version: "27"
 
       - name: Restore deps cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             deps
@@ -79,7 +79,7 @@ jobs:
       MIX_ENV: dev
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: erlef/setup-beam@v1
         with:
@@ -87,7 +87,7 @@ jobs:
           otp-version: "27"
 
       - name: Restore deps cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             deps

@@ -63,7 +63,7 @@ defmodule PhoenixFilament.Panel do
                                   PhoenixFilament.Panel.Options.panel_schema()
                                 )
 
-      if is_nil(@_phx_filament_panel_opts[:on_mount]) do
+      if is_nil(@_phx_filament_panel_opts[:on_mount]) and Mix.env() != :test do
         IO.warn(
           "Panel #{inspect(__MODULE__)} has no on_mount configured. Add on_mount for production use."
         )

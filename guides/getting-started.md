@@ -571,7 +571,7 @@ end
 ```
 
 The `on_mount:` option must be a `{Module, :function}` tuple. The function must match the
-`Phoenix.LiveView.on_mount/4` callback signature:
+Phoenix LiveView `on_mount` callback signature:
 
 ```elixir
 def on_mount(:require_authenticated_user, _params, session, socket) do
