@@ -8,6 +8,8 @@ defmodule PhoenixFilament.Table.TableRenderer do
   """
   use Phoenix.Component
 
+  import PhoenixFilament.Components.Button, only: [button: 1]
+
   alias PhoenixFilament.Table.Action
 
   # ---------------------------------------------------------------------------
@@ -199,16 +201,16 @@ defmodule PhoenixFilament.Table.TableRenderer do
         <td>
           <div class="flex gap-1">
             <%= for action <- @actions do %>
-              <button
-                type="button"
-                class={action_button_class(action)}
+              <.button
+                variant={action_button_variant(action)}
+                size={:sm}
                 phx-click="row_action"
                 phx-value-action={action.type}
                 phx-value-id={@row.id}
                 phx-target={@target}
               >
                 {action.label || action.type |> Atom.to_string() |> String.capitalize()}
-              </button>
+              </.button>
             <% end %>
           </div>
         </td>
@@ -258,31 +260,31 @@ defmodule PhoenixFilament.Table.TableRenderer do
       </div>
 
       <div class="flex items-center gap-2">
-        <button
-          type="button"
-          class="btn btn-sm btn-ghost"
+        <.button
+          variant={:ghost}
+          size={:sm}
           disabled={@page <= 1}
           phx-click="paginate"
           phx-value-page={@page - 1}
           phx-target={@target}
         >
           Previous
-        </button>
+        </.button>
 
         <span class="text-sm">
           Page {@page} of {@total_pages}
         </span>
 
-        <button
-          type="button"
-          class="btn btn-sm btn-ghost"
+        <.button
+          variant={:ghost}
+          size={:sm}
           disabled={@page >= @total_pages}
           phx-click="paginate"
           phx-value-page={@page + 1}
           phx-target={@target}
         >
           Next
-        </button>
+        </.button>
       </div>
 
       <div class="flex items-center gap-2 text-sm">
@@ -366,11 +368,8 @@ defmodule PhoenixFilament.Table.TableRenderer do
     Phoenix.HTML.raw(~s(<span class="badge badge-sm">#{escaped}</span>))
   end
 
-  defp action_button_class(%Action{type: :delete}),
-    do: "btn btn-sm btn-error"
-
-  defp action_button_class(_action),
-    do: "btn btn-sm btn-ghost"
+  defp action_button_variant(%Action{type: :delete}), do: :danger
+  defp action_button_variant(_action), do: :ghost
 
   defp render_filter(filter, filter_values, target) do
     current = Map.get(filter_values, filter.field, "")
