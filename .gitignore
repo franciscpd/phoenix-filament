@@ -3,6 +3,10 @@
 /_build/
 /doc/
 
+# Hex build artifacts
+phoenix_filament-*.tar
+phoenix_filament-*/
+
 # Crash dumps
 erl_crash.dump
 
