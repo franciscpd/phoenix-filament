@@ -3,10 +3,7 @@ defmodule PhoenixFilament.Plugin.Resolver do
 
   @defaults %{nav_items: [], routes: [], widgets: [], hooks: []}
 
-  @doc """
-  Resolves all plugins by calling register/2 on each and merging results.
-  Returns %{all_nav_items, all_routes, all_widgets, all_hooks}.
-  """
+  @doc false
   def resolve(plugins, panel_module) do
     results =
       Enum.map(plugins, fn {mod, opts} ->
