@@ -38,8 +38,17 @@ defmodule PhoenixFilament.PanelTest do
       assert resource.slug == "posts"
     end
 
-    test "returns registered widgets (empty)" do
-      assert TestPanel.__panel__(:widgets) == []
+    test "returns sorted widgets with resolved column_span" do
+      widgets = TestPanel.__panel__(:widgets)
+      assert length(widgets) == 2
+
+      [first, second] = widgets
+      assert first.module == PhoenixFilament.Test.Widgets.TestStats
+      assert first.sort == 1
+      assert first.column_span == 12
+      assert second.module == PhoenixFilament.Test.Widgets.TestCustom
+      assert second.sort == 2
+      assert second.column_span == 6
     end
 
     test "raises on unknown key" do

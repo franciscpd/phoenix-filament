@@ -12,5 +12,7 @@ defmodule PhoenixFilament.Test.Panels.TestPanel do
   end
 
   widgets do
+    widget PhoenixFilament.Test.Widgets.TestStats, sort: 1, column_span: :full
+    widget PhoenixFilament.Test.Widgets.TestCustom, sort: 2, column_span: 6
   end
 end
