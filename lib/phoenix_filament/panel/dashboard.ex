@@ -8,7 +8,7 @@ defmodule PhoenixFilament.Panel.Dashboard do
 
     widgets =
       if panel_module do
-        panel_module.__panel__(:widgets)
+        panel_module.__panel__(:all_widgets)
       else
         []
       end
