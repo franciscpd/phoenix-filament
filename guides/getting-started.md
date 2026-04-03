@@ -90,6 +90,34 @@ end
 The `phoenix_filament_panel/2` macro registers all CRUD routes, the dashboard, and any
 plugin routes automatically.
 
+### Icons
+
+PhoenixFilament uses [Heroicons](https://heroicons.com) for sidebar and widget icons.
+Icons are referenced by their CSS class name (e.g., `hero-document-text`).
+
+Phoenix 1.8 apps include Heroicons by default through the `assets/vendor/heroicons/`
+directory. If your app was generated with Phoenix 1.8, icons work out of the box.
+
+For older Phoenix apps or custom setups, ensure Heroicons are available:
+
+1. The `heroicons` package must be in your assets
+2. CSS classes like `hero-document-text` must resolve to SVG icons
+3. See the [Phoenix Components documentation](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html) for setup details
+
+When registering resources, specify icons with the `hero-` prefix:
+
+```elixir
+resources do
+  resource MyAppWeb.Admin.PostResource,
+    icon: "hero-document-text"
+
+  resource MyAppWeb.Admin.UserResource,
+    icon: "hero-users"
+end
+```
+
+Resources without an `icon:` option display the first letter of their label as a fallback.
+
 ## Hook Setup
 
 Open `assets/js/app.js` and import the PhoenixFilament hooks:
