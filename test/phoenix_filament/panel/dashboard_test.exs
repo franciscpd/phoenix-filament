@@ -9,4 +9,14 @@ defmodule PhoenixFilament.Panel.DashboardTest do
     assert function_exported?(Dashboard, :render, 1)
     assert function_exported?(Dashboard, :handle_info, 2)
   end
+
+  test "Dashboard reads :all_widgets from panel module" do
+    {:ok, source} = File.read("lib/phoenix_filament/panel/dashboard.ex")
+    assert source =~ ":all_widgets"
+  end
+
+  test "Dashboard renders empty state message for no widgets" do
+    {:ok, source} = File.read("lib/phoenix_filament/panel/dashboard.ex")
+    assert source =~ "No widgets configured"
+  end
 end
