@@ -25,6 +25,14 @@ defmodule PhoenixFilament.Panel.Hook do
 
     socket = maybe_subscribe_pubsub(socket, opts)
 
+    # Boot plugins (with error isolation)
+    plugins = panel_module.__panel__(:plugins)
+    socket = boot_plugins(socket, plugins)
+
+    # Attach plugin lifecycle hooks
+    all_hooks = panel_module.__panel__(:all_hooks)
+    socket = attach_plugin_hooks(socket, all_hooks)
+
     socket =
       Phoenix.LiveView.attach_hook(socket, :panel_nav_update, :handle_params, fn
         _params, uri, socket ->
@@ -94,6 +102,30 @@ defmodule PhoenixFilament.Panel.Hook do
   end
 
   defp action_breadcrumb(_), do: []
+
+  defp boot_plugins(socket, plugins) do
+    Enum.reduce(plugins, socket, fn {mod, _opts}, sock ->
+      if function_exported?(mod, :boot, 1) do
+        try do
+          mod.boot(sock)
+        rescue
+          e ->
+            require Logger
+            Logger.warning("Plugin #{inspect(mod)}.boot/1 raised: #{Exception.message(e)}")
+            sock
+        end
+      else
+        sock
+      end
+    end)
+  end
+
+  defp attach_plugin_hooks(socket, hooks) do
+    Enum.reduce(hooks, socket, fn {stage, fun}, sock ->
+      hook_name = :"plugin_hook_#{:erlang.phash2(fun)}"
+      Phoenix.LiveView.attach_hook(sock, hook_name, stage, fun)
+    end)
+  end
 
   defp maybe_subscribe_pubsub(socket, opts) do
     pubsub = opts[:pubsub]
