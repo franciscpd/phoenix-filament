@@ -1,0 +1,22 @@
+# Dependencies and build
+/deps/
+/_build/
+/doc/
+
+# Crash dumps
+erl_crash.dump
+
+# IDE
+.elixir_ls/
+.vscode/
+*.beam
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Superpowers brainstorm sessions
+.superpowers/
+
+# Claude Code
+.claude/
