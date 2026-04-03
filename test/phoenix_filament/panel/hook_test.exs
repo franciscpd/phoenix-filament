@@ -61,6 +61,14 @@ defmodule PhoenixFilament.Panel.HookTest do
       bootable = Enum.filter(plugins, fn {mod, _} -> function_exported?(mod, :boot, 1) end)
       assert length(bootable) == 2
     end
+
+    test "CrashingPlugin.boot/1 raises but doesn't prevent other plugins from being callable" do
+      assert_raise RuntimeError, "plugin crash!", fn ->
+        CrashingPlugin.boot(:fake_socket)
+      end
+      # BootTracker still works independently
+      assert BootTracker.boot(:fake_socket) == :fake_socket
+    end
   end
 
   describe "plugin hooks lifecycle" do
@@ -84,6 +92,21 @@ defmodule PhoenixFilament.Panel.HookTest do
       result = HookPlugin.register(nil, [])
       assert [{:handle_info, fun}] = result.hooks
       assert is_function(fun, 2)
+    end
+
+    test "plugin hooks produce unique names by index" do
+      hooks = [
+        {:handle_info, &HookPlugin.on_info/2},
+        {:handle_info, &HookPlugin.on_info/2}
+      ]
+
+      names =
+        hooks
+        |> Enum.with_index()
+        |> Enum.map(fn {_, idx} -> :"plugin_hook_#{idx}" end)
+
+      assert names == [:plugin_hook_0, :plugin_hook_1]
+      assert length(Enum.uniq(names)) == length(names)
     end
   end
 end
